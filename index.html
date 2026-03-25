@@ -228,9 +228,7 @@
       left: 100px;
       top: 170px;
       z-index: 3;
-      transition-property: left, top;
-      transition-timing-function: linear;
-      transition-duration: 0ms;
+      transition: left 0.3s linear, top 0.3s linear;
       --dir: 1;
     }
 
@@ -474,27 +472,43 @@
     }
 
     .cuicui.is-moving .pose {
-      animation: walk-bounce 0.36s infinite alternate;
+      animation: walk-bounce 0.28s infinite alternate;
     }
 
-    .cuicui.is-moving .arm.left,
+    .cuicui.is-moving .shadow {
+      animation: shadow-pulse 0.28s infinite alternate;
+    }
+
+    .cuicui.is-moving .arm.left {
+      animation: arm-swing-left 0.35s infinite;
+    }
+
+    .cuicui.is-moving .arm.right {
+      animation: arm-swing-right 0.35s infinite;
+    }
+
+    .cuicui.is-moving .leg.left {
+      animation: leg-swing-left 0.35s infinite;
+    }
+
+    .cuicui.is-moving .leg.right {
+      animation: leg-swing-right 0.35s infinite;
+    }
+
     .cuicui.action-run .arm.left {
-      animation: arm-swing-left 0.32s infinite alternate;
+      animation: arm-swing-left 0.18s infinite;
     }
 
-    .cuicui.is-moving .arm.right,
     .cuicui.action-run .arm.right {
-      animation: arm-swing-right 0.32s infinite alternate;
+      animation: arm-swing-right 0.18s infinite;
     }
 
-    .cuicui.is-moving .leg.left,
     .cuicui.action-run .leg.left {
-      animation: leg-swing-left 0.32s infinite alternate;
+      animation: leg-swing-left 0.18s infinite;
     }
 
-    .cuicui.is-moving .leg.right,
     .cuicui.action-run .leg.right {
-      animation: leg-swing-right 0.32s infinite alternate;
+      animation: leg-swing-right 0.18s infinite;
     }
 
     .cuicui.mood-happy .head {
@@ -502,7 +516,12 @@
     }
 
     .cuicui.mood-happy .pose {
-      transform: translateX(-50%) rotate(-4deg);
+      animation: happy-bounce 0.6s ease-in-out infinite;
+    }
+
+    @keyframes happy-bounce {
+      0%, 100% { transform: translateX(-50%) rotate(-4deg) scale(1); }
+      50% { transform: translateX(-50%) rotate(4deg) scale(1.02, 0.98); }
     }
 
     .cuicui.mood-sad .pose {
@@ -526,91 +545,217 @@
     }
 
     .cuicui.action-jump .pose {
-      animation: jump-hop 0.52s ease-in-out 3;
+      animation: jump-hop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) 3;
+    }
+
+    .cuicui.action-jump .head {
+      animation: jump-head-tilt 0.6s ease-in-out 3;
+    }
+
+    @keyframes jump-head-tilt {
+      0%, 100% { transform: translateX(-50%) rotate(0deg); }
+      35% { transform: translateX(-50%) rotate(-15deg); }
+      50% { transform: translateX(-50%) rotate(0deg); }
+      65% { transform: translateX(-50%) rotate(15deg); }
     }
 
     .cuicui.action-run .pose {
-      animation: run-lean 0.22s infinite alternate;
+      animation: run-lean 0.18s infinite;
+    }
+
+    .cuicui.action-run .head {
+      animation: run-head-bob 0.18s infinite;
+    }
+
+    @keyframes run-head-bob {
+      0%, 100% { transform: translateX(-50%) rotate(-10deg); }
+      50% { transform: translateX(-50%) rotate(10deg); }
     }
 
     .cuicui.action-pushup .pose {
-      animation: push-up 0.62s ease-in-out 4;
+      animation: push-up 0.55s cubic-bezier(0.45, 0, 0.55, 1) 5;
+    }
+
+    .cuicui.action-pushup .arm.left {
+      animation: pushup-arm-left 0.55s ease-in-out 5;
+    }
+
+    .cuicui.action-pushup .arm.right {
+      animation: pushup-arm-right 0.55s ease-in-out 5;
+    }
+
+    @keyframes pushup-arm-left {
+      0%, 100% { transform: rotate(16deg) scaleY(1); }
+      50% { transform: rotate(-20deg) scaleY(0.8); }
+    }
+
+    @keyframes pushup-arm-right {
+      0%, 100% { transform: rotate(-16deg) scaleY(1); }
+      50% { transform: rotate(20deg) scaleY(0.8); }
     }
 
     .cuicui.action-slap .pose {
-      animation: slap-shake 0.12s linear 8;
+      animation: slap-shake 0.6s cubic-bezier(0.36, 0, 0.66, -0.56) 1;
+    }
+
+    .cuicui.action-slap .head {
+      animation: slap-head-shake 0.6s ease-in-out 1;
+    }
+
+    @keyframes slap-head-shake {
+      0%, 100% { transform: translateX(-50%) rotate(0deg); }
+      15% { transform: translateX(-50%) rotate(-25deg); }
+      30% { transform: translateX(-50%) rotate(20deg); }
+      45% { transform: translateX(-50%) rotate(-15deg); }
+      60% { transform: translateX(-50%) rotate(10deg); }
+      75% { transform: translateX(-50%) rotate(-5deg); }
     }
 
     .cuicui.action-pet .pose {
-      animation: cuddle 0.72s ease-in-out 2;
+      animation: cuddle 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) 2;
+    }
+
+    .cuicui.action-pet .head {
+      animation: pet-head-rub 0.8s ease-in-out 2;
+    }
+
+    @keyframes pet-head-rub {
+      0%, 100% { transform: translateX(-50%) rotate(0deg); }
+      25% { transform: translateX(-50%) rotate(-10deg) translateY(3px); }
+      50% { transform: translateX(-50%) rotate(5deg) translateY(-5px); }
+      75% { transform: translateX(-50%) rotate(-8deg) translateY(2px); }
     }
 
     .cuicui.action-feed .head,
     .cuicui.action-water .head {
-      animation: nibble 0.44s ease-in-out 3;
+      animation: nibble 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) 3;
+    }
+
+    .cuicui.action-feed .pose,
+    .cuicui.action-water .pose {
+      animation: eat-bounce 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) 3;
+    }
+
+    @keyframes eat-bounce {
+      0%, 100% { transform: translateX(-50%) scale(1); }
+      50% { transform: translateX(-50%) scale(1.05, 0.95) translateY(5px); }
+    }
+
+    /* 增强悲伤动画 */
+    .cuicui.mood-sad .pose {
+      animation: sad-sway 2s ease-in-out infinite;
+    }
+
+    @keyframes sad-sway {
+      0%, 100% { transform: translateX(-50%) translateY(6px) rotate(6deg); }
+      50% { transform: translateX(-50%) translateY(8px) rotate(-3deg); }
+    }
+
+    /* 增强委屈动画 */
+    .cuicui.mood-grievance .pose {
+      animation: grievance-shiver 0.3s ease-in-out infinite;
+    }
+
+    @keyframes grievance-shiver {
+      0%, 100% { transform: translateX(-50%) translateY(4px) rotate(3deg); }
+      50% { transform: translateX(-50%) translateY(4px) rotate(-3deg); }
+    }
+
+    .cuicui.mood-grievance .head {
+      animation: grievance-head-tilt 0.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes grievance-head-tilt {
+      from { transform: translateX(-50%) rotate(-8deg); }
+      to { transform: translateX(-50%) rotate(-15deg) translateY(2px); }
     }
 
     @keyframes walk-bounce {
-      from { transform: translateX(-50%) translateY(0); }
-      to { transform: translateX(-50%) translateY(-18px); }
+      0% { transform: translateX(-50%) translateY(0) scaleY(1); }
+      40% { transform: translateX(-50%) translateY(-22px) scaleY(1.05); }
+      100% { transform: translateX(-50%) translateY(-8px) scaleY(0.95); }
+    }
+
+    @keyframes shadow-pulse {
+      0% { transform: translateX(-50%) scale(1); opacity: 0.28; }
+      40% { transform: translateX(-50%) scale(0.7); opacity: 0.15; }
+      100% { transform: translateX(-50%) scale(0.9); opacity: 0.22; }
     }
 
     @keyframes arm-swing-left {
-      from { transform: rotate(50deg); }
-      to { transform: rotate(-30deg); }
+      0% { transform: rotate(60deg) scaleY(1); }
+      50% { transform: rotate(-40deg) scaleY(1.1); }
+      100% { transform: rotate(60deg) scaleY(1); }
     }
 
     @keyframes arm-swing-right {
-      from { transform: rotate(-50deg); }
-      to { transform: rotate(30deg); }
+      0% { transform: rotate(-60deg) scaleY(1); }
+      50% { transform: rotate(40deg) scaleY(1.1); }
+      100% { transform: rotate(-60deg) scaleY(1); }
     }
 
     @keyframes leg-swing-left {
-      from { transform: rotate(30deg); }
-      to { transform: rotate(-30deg); }
+      0% { transform: rotate(45deg) scaleY(1); }
+      50% { transform: rotate(-35deg) scaleY(1.05); }
+      100% { transform: rotate(45deg) scaleY(1); }
     }
 
     @keyframes leg-swing-right {
-      from { transform: rotate(-30deg); }
-      to { transform: rotate(30deg); }
+      0% { transform: rotate(-45deg) scaleY(1); }
+      50% { transform: rotate(35deg) scaleY(1.05); }
+      100% { transform: rotate(-45deg) scaleY(1); }
     }
 
     @keyframes jump-hop {
-      0%, 100% { transform: translateX(-50%) translateY(0); }
-      40% { transform: translateX(-50%) translateY(-120px); }
-      55% { transform: translateX(-50%) translateY(-120px) scaleY(1.1); }
-      75% { transform: translateX(-50%) translateY(0) scaleY(0.9); }
+      0%, 100% { transform: translateX(-50%) translateY(0) scale(1, 1); }
+      15% { transform: translateX(-50%) translateY(10px) scale(1.15, 0.85); }
+      35% { transform: translateX(-50%) translateY(-140px) scale(0.9, 1.1); }
+      50% { transform: translateX(-50%) translateY(-160px) scale(1, 1); }
+      65% { transform: translateX(-50%) translateY(-140px) scale(0.95, 1.05); }
+      85% { transform: translateX(-50%) translateY(0) scale(1.1, 0.9); }
     }
 
     @keyframes run-lean {
-      from { transform: translateX(-50%) translateY(-8px) rotate(12deg); }
-      to { transform: translateX(-50%) translateY(6px) rotate(-10deg); }
+      0% { transform: translateX(-50%) translateY(-15px) rotate(20deg) scaleY(1.05); }
+      50% { transform: translateX(-50%) translateY(5px) rotate(-15deg) scaleY(0.95); }
+      100% { transform: translateX(-50%) translateY(-15px) rotate(20deg) scaleY(1.05); }
     }
 
     @keyframes push-up {
-      0%, 100% { transform: translateX(-50%) rotate(0deg) translateY(0); }
-      20% { transform: translateX(-50%) rotate(-90deg) translateY(20px); }
-      50% { transform: translateX(-50%) rotate(-90deg) translateY(60px); }
-      80% { transform: translateX(-50%) rotate(-90deg) translateY(20px); }
+      0%, 100% { transform: translateX(-50%) rotate(0deg) translateY(0) scale(1); }
+      15% { transform: translateX(-50%) rotate(-85deg) translateY(10px) scale(1.05, 0.95); }
+      30% { transform: translateX(-50%) rotate(-90deg) translateY(-40px) scale(0.95, 1.05); }
+      50% { transform: translateX(-50%) rotate(-90deg) translateY(70px) scale(1.1, 0.9); }
+      70% { transform: translateX(-50%) rotate(-90deg) translateY(-40px) scale(0.95, 1.05); }
+      85% { transform: translateX(-50%) rotate(-85deg) translateY(10px) scale(1.05, 0.95); }
     }
 
     @keyframes slap-shake {
-      0%, 100% { transform: translateX(-50%) rotate(0deg); }
-      25% { transform: translateX(-50%) rotate(8deg); }
-      50% { transform: translateX(-50%) rotate(-8deg); }
-      75% { transform: translateX(-50%) rotate(6deg); }
+      0%, 100% { transform: translateX(-50%) translateY(0) rotate(0deg) scale(1); }
+      10% { transform: translateX(-50%) translateY(-10px) rotate(-15deg) scale(1.05); }
+      20% { transform: translateX(-50%) translateY(0) rotate(15deg) scale(0.95); }
+      30% { transform: translateX(-50%) translateY(-8px) rotate(-20deg) scale(1.05); }
+      40% { transform: translateX(-50%) translateY(0) rotate(20deg) scale(0.95); }
+      50% { transform: translateX(-50%) translateY(-6px) rotate(-15deg) scale(1.05); }
+      60% { transform: translateX(-50%) translateY(0) rotate(15deg) scale(0.95); }
+      70% { transform: translateX(-50%) translateY(-4px) rotate(-10deg) scale(1.03); }
+      80% { transform: translateX(-50%) translateY(0) rotate(10deg) scale(0.97); }
+      90% { transform: translateX(-50%) translateY(-2px) rotate(-5deg) scale(1.02); }
     }
 
     @keyframes cuddle {
-      0%, 100% { transform: translateX(-50%) scale(1); }
-      50% { transform: translateX(-50%) scale(1.2); }
+      0%, 100% { transform: translateX(-50%) scale(1) rotate(0deg); }
+      25% { transform: translateX(-50%) scale(1.15, 0.9) rotate(-8deg) translateY(5px); }
+      50% { transform: translateX(-50%) scale(0.9, 1.15) rotate(0deg) translateY(-10px); }
+      75% { transform: translateX(-50%) scale(1.1, 0.95) rotate(8deg) translateY(3px); }
     }
 
     @keyframes nibble {
-      0%, 100% { transform: translateX(-50%) rotate(0deg); }
-      25% { transform: translateX(-50%) rotate(15deg); }
-      50% { transform: translateX(-50%) rotate(-10deg); }
-      75% { transform: translateX(-50%) rotate(8deg); }
+      0%, 100% { transform: translateX(-50%) rotate(0deg) scale(1); }
+      20% { transform: translateX(-50%) rotate(25deg) scale(1.05, 0.95); }
+      40% { transform: translateX(-50%) rotate(-15deg) scale(0.95, 1.05); }
+      60% { transform: translateX(-50%) rotate(20deg) scale(1.05, 0.95); }
+      80% { transform: translateX(-50%) rotate(-10deg) scale(0.98, 1.02); }
     }
 
     @media (max-width: 800px) {
@@ -1002,7 +1147,6 @@
     }
 
     function clearAction() {
-      if (!state.action) return;
       cuicui.classList.remove(
         'action-jump',
         'action-run',
@@ -1013,6 +1157,13 @@
         'action-pet'
       );
       state.action = '';
+    }
+
+    function stopMoving() {
+      state.moveToken++;
+      state.moving = false;
+      cuicui.classList.remove('is-moving');
+      cuicui.style.transitionDuration = '';
     }
 
     function setAction(actionClass, duration) {
@@ -1046,36 +1197,54 @@
       const dx = targetX - state.x;
       const dy = targetY - state.y;
       const distance = Math.hypot(dx, dy);
+      
+      // 如果距离太近，直接返回
+      if (distance < 5) {
+        return;
+      }
+      
       const duration = Math.max(320, Math.round((distance / speed) * 1000));
       const token = ++state.moveToken;
 
       faceTo(targetX);
       state.moving = true;
       cuicui.classList.add('is-moving');
+      
+      // 先设置过渡时间，再设置位置
       cuicui.style.transitionDuration = `${duration}ms`;
+      
+      // 强制重绘以确保过渡生效
+      void cuicui.offsetHeight;
+      
       cuicui.style.left = `${targetX}px`;
       cuicui.style.top = `${targetY}px`;
+      
+      // 在移动结束后更新状态
+      const startX = state.x;
+      const startY = state.y;
       state.x = targetX;
       state.y = targetY;
+      
       statusText.textContent = note;
 
       window.setTimeout(() => {
         if (state.moveToken !== token) return;
         state.moving = false;
         cuicui.classList.remove('is-moving');
+        cuicui.style.transitionDuration = '';
         if (state.action === 'run') {
           clearAction();
         }
         statusText.textContent = `翠翠已经走到这里了，${moodTextMap[state.mood]}地看着你。`;
-      }, duration + 30);
+      }, duration + 80);
     }
 
     function randomWalkByRun() {
       const { maxX, maxY, minY } = getCuicuiBounds();
-      const offset = Math.random() > 0.5 ? 180 : -180;
+      const offset = Math.random() > 0.5 ? 200 : -200;
       const targetX = clamp(state.x + offset, 18, maxX);
-      const targetY = clamp(state.y + (Math.random() * 60 - 30), minY, maxY);
-      moveTo(targetX, targetY, 480, '翠翠突然撒欢奔跑起来了。');
+      const targetY = clamp(state.y + (Math.random() * 80 - 40), minY, maxY);
+      moveTo(targetX, targetY, 520, '翠翠突然撒欢奔跑起来了。');
     }
 
     function performAction(action) {
@@ -1143,9 +1312,17 @@
     }
 
     scene.addEventListener('click', (event) => {
-      const { rect, cuicuiWidth, cuicuiHeight, maxX, maxY, minY } = getCuicuiBounds();
-      const targetX = clamp(event.clientX - rect.left - cuicuiWidth / 2, 18, maxX);
-      const targetY = clamp(event.clientY - rect.top - cuicuiHeight * 0.7, minY, maxY);
+      const bounds = getCuicuiBounds();
+      const { rect, cuicuiWidth, cuicuiHeight, maxX, maxY, minY } = bounds;
+      
+      // 计算点击位置相对于场景的坐标
+      const clickX = event.clientX - rect.left;
+      const clickY = event.clientY - rect.top;
+      
+      // 计算目标位置（让翠翠的脚底对准点击位置）
+      const targetX = clamp(clickX - cuicuiWidth / 2, 18, maxX);
+      const targetY = clamp(clickY - cuicuiHeight + 20, minY, maxY);
+      
       moveTo(targetX, targetY, state.action === 'run' ? 480 : 260, '翠翠收到你的指令，正穿过草原走来。');
       setBubble('收到，翠翠这就过去。');
     });
