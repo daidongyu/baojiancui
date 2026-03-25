@@ -2,596 +2,633 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>翠翠的奇妙世界</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>认养一只翠翠 - 草原互动小游戏</title>
     <style>
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: 'Microsoft YaHei', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(145deg, #1a472a 0%, #2a6e3a 100%);
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            overflow: hidden;
+            font-family: 'Segoe UI', 'Quicksand', system-ui, -apple-system, 'Poppins', 'Comic Neue', sans-serif;
+            margin: 0;
+            padding: 20px;
         }
 
-        h1 {
-            color: #fff;
-            margin: 20px 0;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        /* 游戏主容器 */
+        .game-container {
+            background: #5b8c5a;
+            border-radius: 64px 64px 48px 48px;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.4), inset 0 1px 4px rgba(255,255,255,0.3);
+            padding: 20px 20px 25px 20px;
         }
 
-        /* 舞台区域 */
-        .stage {
-            width: 100%;
-            max-width: 600px;
-            height: 400px;
+        /* 草原画布区域 */
+        .canvas-wrapper {
+            background: #3e6b3a;
+            border-radius: 48px;
+            box-shadow: inset 0 0 0 3px #c9e085, 0 12px 28px black;
             position: relative;
-            background: linear-gradient(to bottom, #87CEEB 0%, #E0F6FF 50%, #90EE90 50%, #228B22 100%);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            overflow: hidden;
-            margin-bottom: 30px;
         }
 
-        /* 云朵装饰 */
-        .cloud {
-            position: absolute;
-            background: white;
-            border-radius: 50px;
-            opacity: 0.8;
-        }
-
-        .cloud::before, .cloud::after {
-            content: '';
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-        }
-
-        .cloud1 {
-            width: 80px;
-            height: 40px;
-            top: 30px;
-            left: 50px;
-            animation: float 8s ease-in-out infinite;
-        }
-
-        .cloud1::before { width: 40px; height: 40px; top: -20px; left: 10px; }
-        .cloud1::after { width: 50px; height: 50px; top: -25px; right: 10px; }
-
-        .cloud2 {
-            width: 100px;
-            height: 50px;
-            top: 50px;
-            right: 80px;
-            animation: float 10s ease-in-out infinite;
-        }
-
-        .cloud2::before { width: 50px; height: 50px; top: -25px; left: 15px; }
-        .cloud2::after { width: 60px; height: 60px; top: -30px; right: 15px; }
-
-        @keyframes float {
-            0%, 100% { transform: translateX(0); }
-            50% { transform: translateX(30px); }
-        }
-
-        /* 翠翠人物容器 */
-        .cuicui {
-            position: absolute;
-            left: 50%;
-            bottom: 80px;
-            transform: translateX(-50%);
-            width: 120px;
-            height: 200px;
-            transition: all 0.3s ease;
-        }
-
-        /* 头部 - 使用图片 */
-        .head {
-            width: 100px;
-            height: 100px;
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10;
-        }
-
-        .head img {
+        canvas {
+            display: block;
+            margin: 0 auto;
+            border-radius: 42px;
+            cursor: crosshair;
+            background-color: #8fc93a;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid #FFD700;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            height: auto;
         }
 
-        /* 身体 */
-        .body {
-            width: 60px;
-            height: 70px;
-            background: linear-gradient(135deg, #FF6B6B 0%, #EE5A6F 100%);
-            position: absolute;
-            top: 85px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-radius: 15px;
-            z-index: 5;
-        }
-
-        /* 手臂 */
-        .arm {
-            width: 20px;
-            height: 50px;
-            background: linear-gradient(135deg, #FF6B6B 0%, #EE5A6F 100%);
-            position: absolute;
-            top: 90px;
-            border-radius: 10px;
-            transform-origin: top center;
-            z-index: 4;
-        }
-
-        .arm.left {
-            left: 15px;
-            transform: rotate(20deg);
-        }
-
-        .arm.right {
-            right: 15px;
-            transform: rotate(-20deg);
-        }
-
-        /* 腿 */
-        .leg {
-            width: 22px;
-            height: 55px;
-            background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
-            position: absolute;
-            top: 145px;
-            border-radius: 10px;
-            transform-origin: top center;
-            z-index: 4;
-        }
-
-        .leg.left {
-            left: 35px;
-        }
-
-        .leg.right {
-            right: 35px;
-        }
-
-        /* 表情气泡 */
-        .bubble {
-            position: absolute;
-            top: -50px;
-            right: -60px;
-            background: white;
-            padding: 10px 15px;
-            border-radius: 20px;
-            font-size: 24px;
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-        }
-
-        .bubble.show {
-            opacity: 1;
-        }
-
-        .bubble::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 20px;
-            border: 10px solid transparent;
-            border-top-color: white;
-        }
-
-        /* ========== 动作动画 ========== */
-
-        /* 1. 翻跟头 */
-        .cuicui.somersault {
-            animation: somersault 1.5s ease-in-out;
-        }
-
-        @keyframes somersault {
-            0% { transform: translateX(-50%) rotate(0deg); }
-            25% { transform: translateX(-50%) translateY(-30px) rotate(-90deg); }
-            50% { transform: translateX(-50%) translateY(-50px) rotate(-180deg); }
-            75% { transform: translateX(-50%) translateY(-30px) rotate(-270deg); }
-            100% { transform: translateX(-50%) rotate(-360deg); }
-        }
-
-        /* 2. 俯卧撑 */
-        .cuicui.pushup {
-            animation: pushup 2s ease-in-out infinite;
-        }
-
-        @keyframes pushup {
-            0%, 100% {
-                transform: translateX(-50%) rotate(90deg) translateY(0);
-            }
-            50% {
-                transform: translateX(-50%) rotate(90deg) translateY(-20px);
-            }
-        }
-
-        .cuicui.pushup .arm.left {
-            animation: pushupArm 2s ease-in-out infinite;
-        }
-
-        .cuicui.pushup .arm.right {
-            animation: pushupArm 2s ease-in-out infinite;
-        }
-
-        @keyframes pushupArm {
-            0%, 100% { transform: rotate(20deg); }
-            50% { transform: rotate(60deg); }
-        }
-
-        /* 3. 蹦高高 */
-        .cuicui.jump {
-            animation: jump 0.8s ease-in-out infinite;
-        }
-
-        @keyframes jump {
-            0%, 100% {
-                transform: translateX(-50%) translateY(0) scaleY(1);
-            }
-            10% {
-                transform: translateX(-50%) translateY(10px) scaleY(0.8);
-            }
-            40% {
-                transform: translateX(-50%) translateY(-120px) scaleY(1.1);
-            }
-            60% {
-                transform: translateX(-50%) translateY(-120px) scaleY(1.1);
-            }
-            90% {
-                transform: translateX(-50%) translateY(10px) scaleY(0.8);
-            }
-        }
-
-        .cuicui.jump .leg.left {
-            animation: jumpLeg 0.8s ease-in-out infinite;
-        }
-
-        .cuicui.jump .leg.right {
-            animation: jumpLeg 0.8s ease-in-out infinite;
-        }
-
-        @keyframes jumpLeg {
-            0%, 100% { transform: rotate(0deg); }
-            40%, 60% { transform: rotate(-20deg); }
-        }
-
-        .cuicui.jump .arm.left,
-        .cuicui.jump .arm.right {
-            animation: jumpArm 0.8s ease-in-out infinite;
-        }
-
-        @keyframes jumpArm {
-            0%, 100% { transform: rotate(0deg); }
-            40%, 60% { transform: rotate(-40deg); }
-        }
-
-        /* 4. 蹲下 */
-        .cuicui.squat {
-            animation: squat 0.5s ease forwards;
-        }
-
-        @keyframes squat {
-            0% { transform: translateX(-50%) scaleY(1); }
-            100% { transform: translateX(-50%) scaleY(0.7) translateY(30px); }
-        }
-
-        .cuicui.squat .leg.left,
-        .cuicui.squat .leg.right {
-            height: 35px;
-            top: 160px;
-        }
-
-        .cuicui.squat .arm.left {
-            transform: rotate(60deg);
-        }
-
-        .cuicui.squat .arm.right {
-            transform: rotate(-60deg);
-        }
-
-        /* 5. 委屈 */
-        .cuicui.sad {
-            animation: sad 2s ease-in-out infinite;
-        }
-
-        @keyframes sad {
-            0%, 100% { transform: translateX(-50%) translateY(0); }
-            50% { transform: translateX(-50%) translateY(5px); }
-        }
-
-        .cuicui.sad .head {
-            animation: sadHead 2s ease-in-out infinite;
-        }
-
-        @keyframes sadHead {
-            0%, 100% { transform: translateX(-50%) rotate(0deg); }
-            50% { transform: translateX(-50%) rotate(-10deg); }
-        }
-
-        .cuicui.sad .arm.left {
-            transform: rotate(40deg);
-        }
-
-        .cuicui.sad .arm.right {
-            transform: rotate(-40deg);
-        }
-
-        /* 6. 开心 */
-        .cuicui.happy {
-            animation: happy 0.6s ease-in-out infinite;
-        }
-
-        @keyframes happy {
-            0%, 100% { transform: translateX(-50%) scale(1); }
-            50% { transform: translateX(-50%) scale(1.1) translateY(-10px); }
-        }
-
-        .cuicui.happy .arm.left {
-            animation: happyArmLeft 0.6s ease-in-out infinite;
-        }
-
-        .cuicui.happy .arm.right {
-            animation: happyArmRight 0.6s ease-in-out infinite;
-        }
-
-        @keyframes happyArmLeft {
-            0%, 100% { transform: rotate(20deg); }
-            50% { transform: rotate(-30deg); }
-        }
-
-        @keyframes happyArmRight {
-            0%, 100% { transform: rotate(-20deg); }
-            50% { transform: rotate(30deg); }
-        }
-
-        /* 7. 狂奔 */
-        .cuicui.run {
-            animation: runBody 0.4s ease-in-out infinite;
-        }
-
-        @keyframes runBody {
-            0%, 100% {
-                transform: translateX(-50%) translateY(0) rotate(15deg);
-            }
-            50% {
-                transform: translateX(-50%) translateY(-15px) rotate(15deg);
-            }
-        }
-
-        .cuicui.run .leg.left {
-            animation: runLegLeft 0.4s ease-in-out infinite;
-        }
-
-        .cuicui.run .leg.right {
-            animation: runLegRight 0.4s ease-in-out infinite;
-        }
-
-        @keyframes runLegLeft {
-            0%, 100% { transform: rotate(-40deg); }
-            50% { transform: rotate(40deg); }
-        }
-
-        @keyframes runLegRight {
-            0%, 100% { transform: rotate(40deg); }
-            50% { transform: rotate(-40deg); }
-        }
-
-        .cuicui.run .arm.left {
-            animation: runArmLeft 0.4s ease-in-out infinite;
-        }
-
-        .cuicui.run .arm.right {
-            animation: runArmRight 0.4s ease-in-out infinite;
-        }
-
-        @keyframes runArmLeft {
-            0%, 100% { transform: rotate(40deg); }
-            50% { transform: rotate(-40deg); }
-        }
-
-        @keyframes runArmRight {
-            0%, 100% { transform: rotate(-40deg); }
-            50% { transform: rotate(40deg); }
-        }
-
-        /* 跑步尘土效果 */
-        .dust {
-            position: absolute;
-            bottom: 70px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 30px;
-            opacity: 0;
-        }
-
-        .dust.show {
-            opacity: 1;
-        }
-
-        .dust-particle {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background: #D2691E;
-            border-radius: 50%;
-            animation: dustFly 0.6s ease-out infinite;
-        }
-
-        .dust-particle:nth-child(1) { left: 10px; animation-delay: 0s; }
-        .dust-particle:nth-child(2) { left: 30px; animation-delay: 0.2s; }
-        .dust-particle:nth-child(3) { left: 50px; animation-delay: 0.1s; }
-        .dust-particle:nth-child(4) { left: 70px; animation-delay: 0.3s; }
-
-        @keyframes dustFly {
-            0% { transform: translateY(0) scale(1); opacity: 0.8; }
-            100% { transform: translateY(-30px) scale(0); opacity: 0; }
-        }
-
-        /* 按钮区域 */
-        .buttons {
+        /* 按钮面板 - 可爱风格 */
+        .action-panel {
+            margin-top: 25px;
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 15px;
-            padding: 0 20px;
-            max-width: 700px;
+            gap: 12px;
+            max-width: 900px;
+            background: rgba(46, 58, 31, 0.7);
+            backdrop-filter: blur(4px);
+            border-radius: 60px;
+            padding: 18px 20px;
+            border: 1px solid #f9e7b3;
         }
 
-        .btn {
-            padding: 12px 25px;
-            font-size: 16px;
-            font-weight: bold;
-            color: white;
+        .action-btn {
+            background: #fff6df;
             border: none;
-            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            padding: 8px 18px;
+            border-radius: 60px;
+            color: #4a2e1e;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            box-shadow: 0 5px 0 #b4845c;
+            transition: 0.07s linear;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        .action-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #b4845c;
         }
 
-        .btn:active {
-            transform: translateY(0);
+        /* 情绪提示小尾巴 */
+        .emote-bubble {
+            position: absolute;
+            font-size: 2.5rem;
+            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.3));
+            pointer-events: none;
+            z-index: 30;
+            transition: all 0.2s ease-out;
+            animation: floatUp 1s forwards;
         }
 
-        .btn-somersault { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-        .btn-pushup { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
-        .btn-jump { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
-        .btn-squat { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
-        .btn-sad { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); color: #666; }
-        .btn-happy { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); color: #d35400; }
-        .btn-run { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); color: #c0392b; }
-        .btn-stop { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0px) scale(0.8);}
+            100% { opacity: 0; transform: translateY(-55px) scale(1.2);}
+        }
+
+        /* 状态栏信息 */
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 12px;
+            padding: 0 15px;
+            color: #fff5cf;
+            text-shadow: 2px 2px 0 #2c5a2a;
+            font-weight: bold;
+        }
+
+        .stats span {
+            background: #2c3a1faa;
+            backdrop-filter: blur(4px);
+            padding: 5px 15px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+        }
+
+        .reset-area {
+            display: flex;
+            gap: 12px;
+        }
+
+        .reset-btn {
+            background: #f5bc70;
+            border: none;
+            border-radius: 50px;
+            padding: 4px 16px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: inherit;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        @media (max-width: 700px) {
+            .action-btn { padding: 6px 12px; font-size: 0.8rem; gap: 4px; }
+            .action-panel { gap: 8px; }
+            .emote-bubble { font-size: 2rem; }
+        }
     </style>
 </head>
 <body>
-    <h1>🌟 翠翠的奇妙世界 🌟</h1>
-
-    <div class="stage">
-        <!-- 云朵装饰 -->
-        <div class="cloud cloud1"></div>
-        <div class="cloud cloud2"></div>
-
-        <!-- 翠翠 -->
-        <div class="cuicui" id="cuicui">
-            <div class="bubble" id="bubble">😊</div>
-            <div class="head">
-                <img src="cuicui.jpg" alt="翠翠">
+<div>
+    <div class="game-container">
+        <div class="stats">
+            <span>🐑 翠翠的草原乐园 🌾</span>
+            <div class="reset-area">
+                <button class="reset-btn" id="resetPosBtn">🏞️ 重置位置</button>
+                <button class="reset-btn" id="resetMoodBtn">💖 恢复心情</button>
             </div>
-            <div class="body"></div>
-            <div class="arm left"></div>
-            <div class="arm right"></div>
-            <div class="leg left"></div>
-            <div class="leg right"></div>
         </div>
-
-        <!-- 跑步尘土 -->
-        <div class="dust" id="dust">
-            <div class="dust-particle"></div>
-            <div class="dust-particle"></div>
-            <div class="dust-particle"></div>
-            <div class="dust-particle"></div>
+        <div class="canvas-wrapper">
+            <canvas id="gameCanvas" width="900" height="500" style="width:100%; height:auto; max-width:900px; aspect-ratio:900/500"></canvas>
         </div>
+        <div class="action-panel" id="actionPanel">
+            <!-- 按钮们 动态绑定但直接在html里写好方便 -->
+        </div>
+        <div style="text-align: center; margin-top: 12px; font-size:12px; color:#e9f5cf;">✨ 点击草原任意处，翠翠会走过去 ✨</div>
     </div>
+</div>
 
-    <!-- 按钮控制区 -->
-    <div class="buttons">
-        <button class="btn btn-somersault" onclick="doAction('somersault', '🤸')">翻跟头</button>
-        <button class="btn btn-pushup" onclick="doAction('pushup', '💪')">俯卧撑</button>
-        <button class="btn btn-jump" onclick="doAction('jump', '⬆️')">蹦高高</button>
-        <button class="btn btn-squat" onclick="doAction('squat', '🧘')">蹲下</button>
-        <button class="btn btn-sad" onclick="doAction('sad', '😢')">委屈</button>
-        <button class="btn btn-happy" onclick="doAction('happy', '😄')">开心</button>
-        <button class="btn btn-run" onclick="doAction('run', '🏃')">狂奔</button>
-        <button class="btn btn-stop" onclick="stopAction()">停止</button>
-    </div>
+<script>
+    (function(){
+        // ----- 画布元素 -----
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
 
-    <script>
-        let currentAction = null;
-        let actionInterval = null;
+        // 图片资源
+        const headImg = new Image();
+        headImg.src = './cuicui.jpg';   // 使用指定的翠翠头像图片
+        // 为了处理图片加载失败的情况，加一个默认后备绘制
+        let headLoaded = false;
+        headImg.onload = () => { headLoaded = true; drawGame(); };
+        headImg.onerror = () => { 
+            console.warn("未找到 ./cuicui.jpg , 将用可爱替代头绘制");
+            headLoaded = false; 
+            drawGame();
+        };
 
-        function doAction(action, emoji) {
-            const cuicui = document.getElementById('cuicui');
-            const bubble = document.getElementById('bubble');
-            const dust = document.getElementById('dust');
+        // ----- 翠翠数据模型 -----
+        let cuiCui = {
+            x: 450,          // 画布坐标x (中心点坐标, 绘制基于身体中心)
+            y: 380,          // y 草原地面基准高度(身体底部大约位置，但动画微调)
+            destX: 450,      // 目标x
+            destY: 380,      // 目标y
+            moving: false,
+            emotion: "neutral", // neutral, happy, sad, aggrieved(委屈), jump, run, pushup
+            actionTimer: 0,    // 特殊动作计时帧数
+            // 情绪/状态辅助
+            lastInteraction: "",
+            happiness: 100,    // 开心值 0-120 影响表情倾向
+        };
+        
+        let animationId = null;
+        let showEmoji = null;   // {text, x, y, life}
+        let moveSpeed = 3.8;    // 每帧移动速度
 
-            // 清除之前的动作
-            cuicui.className = 'cuicui';
-            dust.classList.remove('show');
+        // 按钮列表 (包含所有操作)
+        const actions = [
+            { id: "happy", label: "😊 开心", emoji: "😆💖", moodEffect: "happy" },
+            { id: "sad", label: "😢 伤心", emoji: "😭💧", moodEffect: "sad" },
+            { id: "wronged", label: "🥺 委屈", emoji: "🥺💔", moodEffect: "aggrieved" },
+            { id: "jump", label: "🦘 蹦高高", emoji: "✨🦘✨", moodEffect: "jump" },
+            { id: "run", label: "🏃‍♀️ 奔跑", emoji: "💨🏃‍♀️", moodEffect: "run" },
+            { id: "pushup", label: "💪 俯卧撑", emoji: "🤸‍♂️💪", moodEffect: "pushup" },
+            { id: "feed", label: "🍎 投喂食物", emoji: "🍎🍬", moodEffect: "feed" },
+            { id: "water", label: "💧 喂水", emoji: "💧🚰", moodEffect: "water" },
+            { id: "slap", label: "👋 抽耳光", emoji: "💥👋", moodEffect: "slap" },
+            { id: "caress", label: "🤗 爱的抚摸", emoji: "💗✨", moodEffect: "caress" }
+        ];
 
-            if (actionInterval) {
-                clearTimeout(actionInterval);
+        // 情绪相关辅助
+        function applyMoodEffect(actionId, moodEffectType) {
+            // 先停止当前特殊动作 (保留移动)
+            if(cuiCui.actionTimer > 0) cuiCui.actionTimer = 0;
+            // 不同行为影响翠翠的情绪值和表情动画
+            switch(moodEffectType) {
+                case "happy": 
+                    cuiCui.happiness = Math.min(120, cuiCui.happiness + 12);
+                    setEmotionAndAction("happy", "happy", 28);
+                    showFloatingEmoji("😊 开心到转圈");
+                    break;
+                case "sad": 
+                    cuiCui.happiness = Math.max(0, cuiCui.happiness - 15);
+                    setEmotionAndAction("sad", "sad", 35);
+                    showFloatingEmoji("😢 呜呜...");
+                    break;
+                case "aggrieved": 
+                    cuiCui.happiness = Math.max(0, cuiCui.happiness - 8);
+                    setEmotionAndAction("aggrieved", "aggrieved", 40);
+                    showFloatingEmoji("🥺 委屈巴巴");
+                    break;
+                case "jump": 
+                    setEmotionAndAction("jump", "jump", 25);
+                    showFloatingEmoji("🦘 蹦高高~");
+                    // 跳跃时微微上扬坐标效果(不影响实际移动，仅视觉)
+                    break;
+                case "run": 
+                    setEmotionAndAction("run", "run", 30);
+                    showFloatingEmoji("💨 奔跑冲刺!");
+                    // 增加移速短暂?
+                    break;
+                case "pushup": 
+                    setEmotionAndAction("pushup", "pushup", 45);
+                    showFloatingEmoji("💪 俯卧撑好厉害");
+                    break;
+                case "feed":
+                    cuiCui.happiness = Math.min(120, cuiCui.happiness + 18);
+                    setEmotionAndAction("happy", "happy", 25);
+                    showFloatingEmoji("🍎 啊呜~ 好好吃");
+                    break;
+                case "water":
+                    cuiCui.happiness = Math.min(120, cuiCui.happiness + 10);
+                    setEmotionAndAction("happy", "happy", 22);
+                    showFloatingEmoji("💧 咕噜咕噜~");
+                    break;
+                case "slap":
+                    cuiCui.happiness = Math.max(0, cuiCui.happiness - 25);
+                    setEmotionAndAction("sad", "sad", 40);
+                    showFloatingEmoji("😭 呜哇！好疼！");
+                    break;
+                case "caress":
+                    cuiCui.happiness = Math.min(120, cuiCui.happiness + 22);
+                    setEmotionAndAction("happy", "happy", 35);
+                    showFloatingEmoji("🤗❤️ 蹭蹭~ 好舒服");
+                    break;
+                default: break;
             }
+            // 防止数值越界
+            cuiCui.happiness = Math.min(120, Math.max(0, cuiCui.happiness));
+            drawGame();
+        }
 
-            currentAction = action;
+        function setEmotionAndAction(emotionStr, actionAnim, durationFrames) {
+            cuiCui.emotion = emotionStr;
+            if(cuiCui.actionTimer <= 0) cuiCui.actionTimer = durationFrames;
+            else cuiCui.actionTimer = Math.max(cuiCui.actionTimer, durationFrames);
+        }
 
-            // 显示表情
-            bubble.textContent = emoji;
-            bubble.classList.add('show');
+        function showFloatingEmoji(text) {
+            const canvasRect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / canvasRect.width;
+            const scaleY = canvas.height / canvasRect.height;
+            // 在翠翠头上显示
+            let screenX = cuiCui.x;
+            let screenY = cuiCui.y - 60;
+            showEmoji = {
+                text: text,
+                x: screenX,
+                y: screenY,
+                life: 45   // 帧数存活
+            };
+        }
 
-            // 添加动作类
-            cuicui.classList.add(action);
-
-            // 狂奔时显示尘土
-            if (action === 'run') {
-                dust.classList.add('show');
+        // 处理点击草原移动
+        function handleCanvasClick(e) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            let clickX = (e.clientX - rect.left) * scaleX;
+            let clickY = (e.clientY - rect.top) * scaleY;
+            // 边界裁剪，确保在草原范围内 (画布内)
+            clickX = Math.min(canvas.width - 40, Math.max(40, clickX));
+            clickY = Math.min(canvas.height - 70, Math.max(150, clickY));
+            cuiCui.destX = clickX;
+            cuiCui.destY = clickY;
+            cuiCui.moving = true;
+            // 如果正在进行特殊动作且不是奔跑类动作，移动时适当保留动作但移动优先，停止特殊动作动画?
+            if(cuiCui.actionTimer > 0 && cuiCui.emotion !== "run") {
+                // 温柔打断非奔跑动作
+                cuiCui.actionTimer = 0;
+                cuiCui.emotion = "neutral";
             }
+            drawGame();
+        }
 
-            // 翻跟头只播放一次
-            if (action === 'somersault') {
-                actionInterval = setTimeout(() => {
-                    cuicui.classList.remove(action);
-                    bubble.classList.remove('show');
-                    currentAction = null;
-                }, 1500);
+        // 移动逻辑
+        function updateMovement() {
+            if(!cuiCui.moving) return false;
+            let dx = cuiCui.destX - cuiCui.x;
+            let dy = cuiCui.destY - cuiCui.y;
+            let distance = Math.hypot(dx, dy);
+            if(distance < 2.5) {
+                cuiCui.x = cuiCui.destX;
+                cuiCui.y = cuiCui.destY;
+                cuiCui.moving = false;
+                return false;
             }
+            let step = Math.min(moveSpeed, distance);
+            let angle = Math.atan2(dy, dx);
+            cuiCui.x += Math.cos(angle) * step;
+            cuiCui.y += Math.sin(angle) * step;
+            // 边界二次保护
+            cuiCui.x = Math.min(canvas.width - 35, Math.max(35, cuiCui.x));
+            cuiCui.y = Math.min(canvas.height - 55, Math.max(140, cuiCui.y));
+            return true;
+        }
 
-            // 蹲下保持姿势，其他循环播放
-            if (action === 'squat') {
-                // 蹲下保持
+        // 动画计时更新
+        function updateActionTimer() {
+            if(cuiCui.actionTimer > 0) {
+                cuiCui.actionTimer--;
+                if(cuiCui.actionTimer <= 0) {
+                    cuiCui.emotion = "neutral";
+                }
+            }
+            if(showEmoji) {
+                showEmoji.life--;
+                if(showEmoji.life <= 0) showEmoji = null;
+                else showEmoji.y -= 1.2;
             }
         }
 
-        function stopAction() {
-            const cuicui = document.getElementById('cuicui');
-            const bubble = document.getElementById('bubble');
-            const dust = document.getElementById('dust');
-
-            cuicui.className = 'cuicui';
-            bubble.classList.remove('show');
-            dust.classList.remove('show');
-
-            if (actionInterval) {
-                clearTimeout(actionInterval);
-                actionInterval = null;
+        // ---------- 绘画核心: 画翠翠的身体+头（用cuicui.jpg） 身体可爱风格 ----------
+        function drawGame() {
+            if(!canvas) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // 画大草原 (草地纹理)
+            drawPrairie();
+            // 画小花小草装饰
+            drawGrassAndFlowers();
+            
+            // 绘制翠翠的身体 + 四肢 + 表情 基于当前情绪/动作
+            drawCuicuiFull();
+            
+            // 漂浮表情气泡
+            if(showEmoji) {
+                ctx.font = "bold 28px 'Segoe UI Emoji'";
+                ctx.shadowBlur = 0;
+                ctx.fillStyle = "#fff9e8";
+                ctx.shadowColor = "black";
+                ctx.shadowBlur = 4;
+                ctx.fillText(showEmoji.text, showEmoji.x - 30, showEmoji.y - 15);
+                ctx.fillStyle = "#2d2b1f";
+                ctx.shadowBlur = 2;
+                ctx.fillText(showEmoji.text, showEmoji.x - 31, showEmoji.y - 16);
+                ctx.shadowBlur = 0;
             }
-
-            currentAction = null;
+            
+            // 快乐值小挂件
+            ctx.font = "bold 14px monospace";
+            ctx.fillStyle = "#FFFACD";
+            ctx.shadowBlur = 2;
+            ctx.fillText(`❤️ 心情值: ${cuiCui.happiness}`, 20, 40);
+            if(cuiCui.happiness < 30) ctx.fillStyle = "#ffae70";
+            ctx.fillText(`❤️ 心情值: ${cuiCui.happiness}`, 20, 40);
+            ctx.shadowBlur = 0;
         }
-    </script>
+        
+        function drawPrairie() {
+            // 草地渐变
+            const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            grad.addColorStop(0, "#b8e45c");
+            grad.addColorStop(1, "#7cb53e");
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            // 小草细纹
+            ctx.strokeStyle = "#558b2f";
+            ctx.lineWidth = 1;
+            for(let i=0;i<120;i++) {
+                let x = (i*23)%canvas.width;
+                let y = canvas.height-30 + Math.sin(i)*8;
+                ctx.beginPath();
+                ctx.moveTo(x, canvas.height-25);
+                ctx.lineTo(x+4, y-12);
+                ctx.lineTo(x-4, y-10);
+                ctx.fillStyle = "#6f9e37";
+                ctx.fill();
+            }
+        }
+        
+        function drawGrassAndFlowers() {
+            for(let i=0;i<60;i++) {
+                let x = (i*37)%canvas.width;
+                let yOff = Math.sin(i)*6;
+                ctx.beginPath();
+                ctx.fillStyle = ["#FFD966","#F4A261","#E9C46A"][i%3];
+                ctx.arc(x+12, canvas.height-28+yOff, 3, 0, Math.PI*2);
+                ctx.fill();
+                ctx.fillStyle = "#a7c957";
+                ctx.beginPath();
+                ctx.rect(x+10, canvas.height-32+yOff, 2, 6);
+                ctx.fill();
+            }
+        }
+
+        // 绘制翠翠身体部分+头部使用图片
+        function drawCuicuiFull() {
+            const x = cuiCui.x;
+            const y = cuiCui.y;
+            // 动态动作影响身体形态 (俯卧撑时压低, 蹦高时偏移)
+            let bodyOffsetY = 0;
+            let legOffset = 0;
+            let armAngle = 0;
+            let isSpecialAnim = cuiCui.actionTimer > 0;
+            let animFrame = cuiCui.actionTimer;
+            let t = (Date.now() / 80) % 20;
+            
+            if(cuiCui.emotion === "jump" && isSpecialAnim) {
+                bodyOffsetY = -Math.sin(t*2)*5 - 3;
+            } else if(cuiCui.emotion === "run" && isSpecialAnim) {
+                bodyOffsetY = Math.sin(t*3)*2;
+                legOffset = Math.sin(t*5)*6;
+            } else if(cuiCui.emotion === "pushup" && isSpecialAnim) {
+                bodyOffsetY = 12;
+            } else if(cuiCui.emotion === "happy") {
+                // 开心摇晃
+                bodyOffsetY = Math.sin(t*4)*1.5;
+            } else if(cuiCui.emotion === "sad") {
+                bodyOffsetY = 2;
+            }
+            
+            // 绘制身体 (椭圆胖身子)
+            ctx.save();
+            ctx.shadowBlur = 4;
+            ctx.shadowColor = "rgba(0,0,0,0.3)";
+            ctx.beginPath();
+            ctx.ellipse(x, y+5+bodyOffsetY, 28, 32, 0, 0, Math.PI*2);
+            ctx.fillStyle = "#e0b074";
+            ctx.fill();
+            ctx.fillStyle = "#c98f5e";
+            ctx.beginPath();
+            ctx.ellipse(x-2, y+2+bodyOffsetY, 8, 12, 0, 0, Math.PI*2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(x+2, y+2+bodyOffsetY, 8, 12, 0, 0, Math.PI*2);
+            ctx.fill();
+            // 肚子
+            ctx.fillStyle = "#f5cf9b";
+            ctx.beginPath();
+            ctx.ellipse(x, y+8+bodyOffsetY, 22, 24, 0, 0, Math.PI*2);
+            ctx.fill();
+            
+            // 画腿 根据奔跑/俯卧撑动效
+            if(cuiCui.emotion === "pushup" && isSpecialAnim) {
+                ctx.fillStyle = "#b47c48";
+                ctx.fillRect(x-20, y+25+bodyOffsetY, 14, 8);
+                ctx.fillRect(x+6, y+25+bodyOffsetY, 14, 8);
+                ctx.fillStyle = "#9c5e32";
+                ctx.fillRect(x-18, y+32+bodyOffsetY, 10, 6);
+                ctx.fillRect(x+8, y+32+bodyOffsetY, 10, 6);
+            } else {
+                let legShift = legOffset;
+                ctx.fillStyle = "#b47c48";
+                ctx.fillRect(x-18, y+28+bodyOffsetY+legShift*0.5, 12, 14);
+                ctx.fillRect(x+6, y+28+bodyOffsetY-legShift*0.5, 12, 14);
+                ctx.fillStyle = "#9c5e32";
+                ctx.fillRect(x-17, y+38+bodyOffsetY+legShift*0.3, 8, 8);
+                ctx.fillRect(x+7, y+38+bodyOffsetY-legShift*0.3, 8, 8);
+            }
+            // 手臂 依据动作
+            ctx.fillStyle = "#d89f64";
+            if(cuiCui.emotion === "happy" && isSpecialAnim) {
+                ctx.fillRect(x-34, y-4+bodyOffsetY, 22, 12);
+                ctx.fillRect(x+12, y-4+bodyOffsetY, 22, 12);
+                ctx.fillStyle = "#c28648";
+                ctx.fillRect(x-32, y+1+bodyOffsetY, 18, 8);
+                ctx.fillRect(x+14, y+1+bodyOffsetY, 18, 8);
+            } else if(cuiCui.emotion === "run" && isSpecialAnim){
+                let armWave = Math.sin(t*6)*12;
+                ctx.fillRect(x-36+armWave*0.3, y-2+bodyOffsetY, 18, 10);
+                ctx.fillRect(x+18-armWave*0.3, y-2+bodyOffsetY, 18, 10);
+            } else if(cuiCui.emotion === "pushup" && isSpecialAnim){
+                ctx.fillRect(x-28, y+14+bodyOffsetY, 20, 8);
+                ctx.fillRect(x+8, y+14+bodyOffsetY, 20, 8);
+            } else {
+                ctx.fillRect(x-32, y-2+bodyOffsetY, 20, 12);
+                ctx.fillRect(x+12, y-2+bodyOffsetY, 20, 12);
+            }
+            
+            // 头部: 使用 ./cuicui.jpg  绘制圆形区域 + 图片
+            const headRadius = 36;
+            const headX = x;
+            const headY = y - 18 + (bodyOffsetY*0.5);
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(headX, headY, headRadius, 0, Math.PI*2);
+            ctx.closePath();
+            ctx.clip();
+            if(headLoaded && headImg.complete && headImg.naturalWidth>0) {
+                ctx.drawImage(headImg, headX-headRadius, headY-headRadius, headRadius*2, headRadius*2);
+            } else {
+                ctx.fillStyle = "#f7bc6d";
+                ctx.fillRect(headX-headRadius, headY-headRadius, headRadius*2, headRadius*2);
+                ctx.fillStyle = "#a56135";
+                ctx.font = "22px sans-serif";
+                ctx.fillText("🐑", headX-14, headY+10);
+            }
+            ctx.restore();
+            // 加耳朵
+            ctx.fillStyle = "#e6a467";
+            ctx.beginPath();
+            ctx.ellipse(headX-26, headY-18, 12, 16, -0.3, 0, Math.PI*2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(headX+26, headY-18, 12, 16, 0.3, 0, Math.PI*2);
+            ctx.fill();
+            
+            // 绘制表情 (根据情绪覆盖在图片上或者叠加)
+            ctx.font = "28px 'Segoe UI Emoji'";
+            ctx.fillStyle = "#2e241f";
+            ctx.shadowBlur = 2;
+            let eyeX = headX-12, eyeY = headY-6;
+            let eyeX2 = headX+12;
+            if(cuiCui.emotion === "happy") {
+                ctx.fillText("😊", headX-18, headY+6);
+            } else if(cuiCui.emotion === "sad") {
+                ctx.fillText("😢", headX-18, headY+6);
+            } else if(cuiCui.emotion === "aggrieved") {
+                ctx.fillText("🥺", headX-18, headY+6);
+            } else {
+                ctx.fillText("◕‿◕", headX-18, headY+8);
+            }
+            ctx.restore();
+            // 额外腮红
+            ctx.fillStyle = "#f7aca7";
+            ctx.beginPath();
+            ctx.ellipse(headX-22, headY+4, 5, 4, 0, 0, Math.PI*2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(headX+22, headY+4, 5, 4, 0, 0, Math.PI*2);
+            ctx.fill();
+        }
+
+        // 渲染循环
+        function animate() {
+            updateMovement();
+            updateActionTimer();
+            drawGame();
+            requestAnimationFrame(animate);
+        }
+        
+        // 初始化UI按钮
+        function initButtons() {
+            const panel = document.getElementById('actionPanel');
+            panel.innerHTML = '';
+            actions.forEach(act => {
+                const btn = document.createElement('button');
+                btn.className = 'action-btn';
+                btn.innerHTML = act.label;
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    applyMoodEffect(act.id, act.moodEffect);
+                    // 如果是奔跑操作，强制让翠翠移动时增加一点额外速度奔跑感觉：设定目标向随机方向移动？不过为了体验，直接让翠翠向前小跑?可选
+                    if(act.id === "run") {
+                        let randDirX = cuiCui.x + (Math.random() - 0.5)*140;
+                        let randDirY = cuiCui.y + (Math.random() - 0.5)*80;
+                        randDirX = Math.min(canvas.width-40, Math.max(40, randDirX));
+                        randDirY = Math.min(canvas.height-70, Math.max(150, randDirY));
+                        cuiCui.destX = randDirX;
+                        cuiCui.destY = randDirY;
+                        cuiCui.moving = true;
+                    } else if(act.id === "jump") {
+                        // 原地小蹦
+                        cuiCui.actionTimer = 12;
+                    }
+                    drawGame();
+                });
+                panel.appendChild(btn);
+            });
+            document.getElementById('resetPosBtn').addEventListener('click', ()=>{
+                cuiCui.x = 450; cuiCui.y = 380;
+                cuiCui.destX = 450; cuiCui.destY = 380;
+                cuiCui.moving = false;
+                drawGame();
+            });
+            document.getElementById('resetMoodBtn').addEventListener('click', ()=>{
+                cuiCui.happiness = 100;
+                cuiCui.emotion = "neutral";
+                cuiCui.actionTimer = 0;
+                showFloatingEmoji("✨ 心情恢复啦 ✨");
+                drawGame();
+            });
+        }
+        
+        canvas.addEventListener('click', handleCanvasClick);
+        initButtons();
+        // 默认目标初始化
+        cuiCui.destX = cuiCui.x;
+        cuiCui.destY = cuiCui.y;
+        animate();
+        // 初始绘制
+        headImg.onload = ()=>drawGame();
+        headImg.onerror = ()=>drawGame();
+        drawGame();
+    })();
+</script>
 </body>
 </html>
