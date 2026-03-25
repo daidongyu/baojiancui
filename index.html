@@ -25,16 +25,19 @@
     body {
       margin: 0;
       min-height: 100vh;
+      min-height: 100dvh;
       font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
       color: var(--text-main);
       background:
         radial-gradient(circle at top, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0) 32%),
         linear-gradient(180deg, #8fd6ff 0%, #cbeeff 38%, #93d86f 38%, #6bc054 72%, #51a73f 100%);
-      overflow: hidden;
+      overflow-x: hidden;
+      overflow-y: auto;
     }
 
     .app {
       min-height: 100vh;
+      min-height: 100dvh;
       display: grid;
       grid-template-rows: auto 1fr auto;
       gap: 14px;
@@ -613,25 +616,262 @@
     @media (max-width: 800px) {
       .app {
         padding: 12px;
+        gap: 12px;
+      }
+
+      .topbar,
+      .panel {
+        border-radius: 18px;
+      }
+
+      .topbar {
+        padding: 16px;
+      }
+
+      .title-wrap p {
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      .stats {
+        width: 100%;
+        min-width: 0;
+      }
+
+      .stat-card {
+        min-width: calc(50% - 6px);
+      }
+
+      .stat-card span {
+        font-size: 22px;
       }
 
       .scene {
-        height: 56vh;
-        min-height: 380px;
+        height: 52vh;
+        min-height: 340px;
+        max-height: 520px;
+        border-radius: 22px;
+      }
+
+      .sun {
+        top: 20px;
+        right: 20px;
+        width: 64px;
+        height: 64px;
+        box-shadow: 0 0 0 14px rgba(255, 223, 104, 0.18), 0 0 36px rgba(255, 198, 55, 0.42);
+      }
+
+      .hint,
+      .bubble {
+        max-width: calc(100% - 24px);
+        white-space: normal;
+      }
+
+      .hint {
+        top: 12px;
+        font-size: 13px;
+        padding: 9px 12px;
+      }
+
+      .bubble {
+        top: 52px;
+        min-width: 0;
+        font-size: 15px;
+        line-height: 1.4;
+        padding: 9px 14px;
+      }
+
+      .flower:nth-of-type(n + 6) {
+        display: none;
       }
 
       .cuicui {
-        width: 170px;
-        height: 240px;
+        width: 148px;
+        height: 214px;
+      }
+
+      .shadow {
+        width: 88px;
+        height: 18px;
       }
 
       .pose {
-        width: 132px;
-        height: 198px;
+        bottom: 20px;
+        width: 116px;
+        height: 174px;
+      }
+
+      .head {
+        width: 78px;
+        height: 78px;
+        border-width: 4px;
+      }
+
+      .hair-tuft {
+        top: -5px;
+        width: 26px;
+        height: 18px;
+      }
+
+      .body-shape {
+        top: 62px;
+        width: 74px;
+        height: 80px;
+      }
+
+      .belly {
+        top: 80px;
+        width: 40px;
+        height: 44px;
+      }
+
+      .arm {
+        top: 74px;
+        width: 18px;
+        height: 58px;
+      }
+
+      .arm.left {
+        left: 18px;
+      }
+
+      .arm.right {
+        right: 18px;
+      }
+
+      .leg {
+        top: 126px;
+        width: 20px;
+        height: 54px;
+      }
+
+      .leg.left {
+        left: 38px;
+      }
+
+      .leg.right {
+        right: 38px;
+      }
+
+      .foot {
+        width: 28px;
+        height: 10px;
+      }
+
+      .action-prop {
+        right: 0;
+        top: 20px;
+        min-width: 46px;
+        font-size: 12px;
+        padding: 6px 8px;
+      }
+
+      .status-line {
+        margin-bottom: 14px;
+      }
+
+      .status-badge,
+      .status-text {
+        font-size: 14px;
+      }
+
+      .panel {
+        padding: 16px;
       }
 
       .actions {
-        grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      button {
+        min-height: 44px;
+        padding: 12px 10px;
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .app {
+        padding: 10px;
+      }
+
+      .title-wrap h1 {
+        font-size: 28px;
+      }
+
+      .topbar,
+      .panel {
+        border-radius: 16px;
+      }
+
+      .stat-card {
+        min-width: 100%;
+      }
+
+      .scene {
+        height: 46vh;
+        min-height: 300px;
+        max-height: 420px;
+      }
+
+      .sun {
+        width: 54px;
+        height: 54px;
+      }
+
+      .hint {
+        font-size: 12px;
+      }
+
+      .bubble {
+        top: 48px;
+        font-size: 14px;
+      }
+
+      .cuicui {
+        width: 132px;
+        height: 196px;
+      }
+
+      .pose {
+        width: 104px;
+        height: 156px;
+      }
+
+      .head {
+        width: 70px;
+        height: 70px;
+      }
+
+      .body-shape {
+        top: 56px;
+        width: 66px;
+        height: 72px;
+      }
+
+      .belly {
+        top: 72px;
+        width: 36px;
+        height: 38px;
+      }
+
+      .arm {
+        top: 68px;
+        height: 50px;
+      }
+
+      .leg {
+        top: 112px;
+        height: 48px;
+      }
+
+      .leg.left {
+        left: 33px;
+      }
+
+      .leg.right {
+        right: 33px;
       }
     }
   </style>
@@ -641,7 +881,7 @@
     <header class="topbar">
       <div class="title-wrap">
         <h1>认养一只翠翠</h1>
-        <p>点击大草原上的任意位置，翠翠会自己走过去。下面按钮可以和她互动。</p>
+        <p>点击或轻触草原上的任意位置，翠翠会自己走过去。下面按钮可以和她互动。</p>
       </div>
       <div class="stats">
         <div class="stat-card">
@@ -818,6 +1058,16 @@
       cuicui.style.setProperty('--dir', targetX >= state.x ? '1' : '-1');
     }
 
+    function getCuicuiBounds() {
+      const rect = scene.getBoundingClientRect();
+      const cuicuiWidth = cuicui.offsetWidth || 188;
+      const cuicuiHeight = cuicui.offsetHeight || 260;
+      const maxX = Math.max(18, rect.width - cuicuiWidth - 18);
+      const maxY = Math.max(120, rect.height - cuicuiHeight - 10);
+      const minY = Math.min(maxY, Math.max(72, rect.height * 0.28));
+      return { rect, cuicuiWidth, cuicuiHeight, maxX, maxY, minY };
+    }
+
     function moveTo(targetX, targetY, speed = 260, note = '翠翠正慢悠悠走过去。') {
       const dx = targetX - state.x;
       const dy = targetY - state.y;
@@ -847,10 +1097,7 @@
     }
 
     function randomWalkByRun() {
-      const rect = scene.getBoundingClientRect();
-      const maxX = rect.width - 170;
-      const maxY = rect.height - 230;
-      const minY = Math.max(72, rect.height * 0.28);
+      const { maxX, maxY, minY } = getCuicuiBounds();
       const offset = Math.random() > 0.5 ? 180 : -180;
       const targetX = clamp(state.x + offset, 18, maxX);
       const targetY = clamp(state.y + (Math.random() * 60 - 30), minY, maxY);
@@ -928,8 +1175,8 @@
         setAction('slap', 1000);
         changeValue('love', -14);
         setMood('sad', '翠翠被打懵了，委委屈屈地躲开一点。');
-        const rect = scene.getBoundingClientRect();
-        const targetX = clamp(state.x + 60, 18, rect.width - 170);
+        const { maxX } = getCuicuiBounds();
+        const targetX = clamp(state.x + 60, 18, maxX);
         moveTo(targetX, state.y, 340, '翠翠捂着脑袋往旁边躲。');
         return;
       }
@@ -942,12 +1189,9 @@
     }
 
     scene.addEventListener('click', (event) => {
-      const rect = scene.getBoundingClientRect();
-      const maxX = rect.width - 170;
-      const maxY = rect.height - 230;
-      const minY = Math.max(72, rect.height * 0.28);
-      const targetX = clamp(event.clientX - rect.left - 90, 18, maxX);
-      const targetY = clamp(event.clientY - rect.top - 170, minY, maxY);
+      const { rect, cuicuiWidth, cuicuiHeight, maxX, maxY, minY } = getCuicuiBounds();
+      const targetX = clamp(event.clientX - rect.left - cuicuiWidth / 2, 18, maxX);
+      const targetY = clamp(event.clientY - rect.top - cuicuiHeight * 0.7, minY, maxY);
       moveTo(targetX, targetY, state.action === 'run' ? 480 : 260, '翠翠收到你的指令，正穿过草原走来。');
       setBubble('收到，翠翠这就过去。');
     });
@@ -959,9 +1203,9 @@
     });
 
     window.addEventListener('resize', () => {
-      const rect = scene.getBoundingClientRect();
-      state.x = clamp(state.x, 18, rect.width - 170);
-      state.y = clamp(state.y, Math.max(72, rect.height * 0.28), rect.height - 230);
+      const { maxX, maxY, minY } = getCuicuiBounds();
+      state.x = clamp(state.x, 18, maxX);
+      state.y = clamp(state.y, minY, maxY);
       cuicui.style.left = `${state.x}px`;
       cuicui.style.top = `${state.y}px`;
     });
@@ -969,6 +1213,9 @@
     function init() {
       renderStats();
       renderMood();
+      const { maxX, maxY, minY } = getCuicuiBounds();
+      state.x = clamp(state.x, 18, maxX);
+      state.y = clamp(state.y, minY, maxY);
       cuicui.style.left = `${state.x}px`;
       cuicui.style.top = `${state.y}px`;
       cuicui.style.setProperty('--dir', '1');
