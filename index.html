@@ -1,634 +1,981 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>认养一只翠翠 - 草原互动小游戏</title>
-    <style>
-        * {
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>认养一只翠翠</title>
+  <style>
+    :root {
+      --panel-bg: rgba(255, 255, 255, 0.9);
+      --panel-border: rgba(31, 68, 27, 0.14);
+      --text-main: #19311b;
+      --text-soft: #4d6650;
+      --green-1: #bfe88d;
+      --green-2: #84d662;
+      --green-3: #4da944;
+      --accent: #ff9d2e;
+      --danger: #d65c5c;
+      --shadow: rgba(17, 58, 20, 0.2);
+    }
 
-        body {
-            background: linear-gradient(145deg, #1a472a 0%, #2a6e3a 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Segoe UI', 'Quicksand', system-ui, -apple-system, 'Poppins', 'Comic Neue', sans-serif;
-            margin: 0;
-            padding: 20px;
-        }
+    * {
+      box-sizing: border-box;
+    }
 
-        /* 游戏主容器 */
-        .game-container {
-            background: #5b8c5a;
-            border-radius: 64px 64px 48px 48px;
-            box-shadow: 0 20px 35px rgba(0,0,0,0.4), inset 0 1px 4px rgba(255,255,255,0.3);
-            padding: 20px 20px 25px 20px;
-        }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--text-main);
+      background:
+        radial-gradient(circle at top, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0) 32%),
+        linear-gradient(180deg, #8fd6ff 0%, #cbeeff 38%, #93d86f 38%, #6bc054 72%, #51a73f 100%);
+      overflow: hidden;
+    }
 
-        /* 草原画布区域 */
-        .canvas-wrapper {
-            background: #3e6b3a;
-            border-radius: 48px;
-            box-shadow: inset 0 0 0 3px #c9e085, 0 12px 28px black;
-            position: relative;
-        }
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 14px;
+      padding: 18px;
+    }
 
-        canvas {
-            display: block;
-            margin: 0 auto;
-            border-radius: 42px;
-            cursor: crosshair;
-            background-color: #8fc93a;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            width: 100%;
-            height: auto;
-        }
+    .topbar,
+    .panel {
+      width: min(1200px, 100%);
+      margin: 0 auto;
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 22px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 18px 50px rgba(39, 97, 48, 0.13);
+    }
 
-        /* 按钮面板 - 可爱风格 */
-        .action-panel {
-            margin-top: 25px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 12px;
-            max-width: 900px;
-            background: rgba(46, 58, 31, 0.7);
-            backdrop-filter: blur(4px);
-            border-radius: 60px;
-            padding: 18px 20px;
-            border: 1px solid #f9e7b3;
-        }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 20px;
+      flex-wrap: wrap;
+    }
 
-        .action-btn {
-            background: #fff6df;
-            border: none;
-            font-size: 1.1rem;
-            font-weight: bold;
-            padding: 8px 18px;
-            border-radius: 60px;
-            color: #4a2e1e;
-            cursor: pointer;
-            box-shadow: 0 5px 0 #b4845c;
-            transition: 0.07s linear;
-            font-family: inherit;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
+    .title-wrap h1 {
+      margin: 0;
+      font-size: clamp(26px, 4vw, 40px);
+      line-height: 1.1;
+    }
 
-        .action-btn:active {
-            transform: translateY(3px);
-            box-shadow: 0 2px 0 #b4845c;
-        }
+    .title-wrap p {
+      margin: 8px 0 0;
+      color: var(--text-soft);
+      font-size: 15px;
+    }
 
-        /* 情绪提示小尾巴 */
-        .emote-bubble {
-            position: absolute;
-            font-size: 2.5rem;
-            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.3));
-            pointer-events: none;
-            z-index: 30;
-            transition: all 0.2s ease-out;
-            animation: floatUp 1s forwards;
-        }
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      min-width: min(100%, 420px);
+    }
 
-        @keyframes floatUp {
-            0% { opacity: 1; transform: translateY(0px) scale(0.8);}
-            100% { opacity: 0; transform: translateY(-55px) scale(1.2);}
-        }
+    .stat-card {
+      flex: 1 1 120px;
+      min-width: 120px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(30, 75, 22, 0.08);
+    }
 
-        /* 状态栏信息 */
-        .stats {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 12px;
-            padding: 0 15px;
-            color: #fff5cf;
-            text-shadow: 2px 2px 0 #2c5a2a;
-            font-weight: bold;
-        }
+    .stat-card strong {
+      display: block;
+      font-size: 13px;
+      color: var(--text-soft);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
 
-        .stats span {
-            background: #2c3a1faa;
-            backdrop-filter: blur(4px);
-            padding: 5px 15px;
-            border-radius: 40px;
-            font-size: 0.9rem;
-        }
+    .stat-card span {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
 
-        .reset-area {
-            display: flex;
-            gap: 12px;
-        }
+    .scene-shell {
+      width: min(1200px, 100%);
+      margin: 0 auto;
+      min-height: 0;
+    }
 
-        .reset-btn {
-            background: #f5bc70;
-            border: none;
-            border-radius: 50px;
-            padding: 4px 16px;
-            font-weight: bold;
-            cursor: pointer;
-            font-family: inherit;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
+    .scene {
+      position: relative;
+      height: min(64vh, 720px);
+      min-height: 420px;
+      border-radius: 28px;
+      overflow: hidden;
+      cursor: crosshair;
+      box-shadow: inset 0 -40px 120px rgba(13, 84, 25, 0.15), 0 22px 60px rgba(18, 68, 20, 0.2);
+      background:
+        radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.82) 0 34px, rgba(255, 255, 255, 0) 35px),
+        radial-gradient(circle at 20% 14%, rgba(255, 255, 255, 0.72) 0 26px, rgba(255, 255, 255, 0) 27px),
+        radial-gradient(circle at 80% 16%, rgba(255, 255, 255, 0.76) 0 36px, rgba(255, 255, 255, 0) 37px),
+        radial-gradient(circle at 88% 12%, rgba(255, 255, 255, 0.7) 0 24px, rgba(255, 255, 255, 0) 25px),
+        linear-gradient(180deg, #8cd3ff 0%, #b6ebff 43%, #92dc6f 43%, #73c95c 76%, #4caa41 100%);
+    }
 
-        @media (max-width: 700px) {
-            .action-btn { padding: 6px 12px; font-size: 0.8rem; gap: 4px; }
-            .action-panel { gap: 8px; }
-            .emote-bubble { font-size: 2rem; }
-        }
-    </style>
+    .scene::before,
+    .scene::after {
+      content: "";
+      position: absolute;
+      inset: auto auto 0 0;
+      width: 120%;
+      height: 40%;
+      background: radial-gradient(circle at center, rgba(81, 165, 59, 0.7), rgba(81, 165, 59, 0));
+      opacity: 0.65;
+      pointer-events: none;
+    }
+
+    .scene::after {
+      left: auto;
+      right: -10%;
+      bottom: 12%;
+      width: 50%;
+      height: 22%;
+      opacity: 0.4;
+    }
+
+    .sun {
+      position: absolute;
+      top: 28px;
+      right: 56px;
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #ffe690 0%, #ffd35e 65%, #ffbf35 100%);
+      box-shadow: 0 0 0 18px rgba(255, 223, 104, 0.18), 0 0 48px rgba(255, 198, 55, 0.45);
+    }
+
+    .hint,
+    .bubble {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.84);
+      border: 1px solid rgba(26, 66, 20, 0.1);
+      backdrop-filter: blur(10px);
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(23, 72, 32, 0.12);
+      pointer-events: none;
+    }
+
+    .hint {
+      top: 16px;
+      font-size: 14px;
+      color: var(--text-soft);
+    }
+
+    .bubble {
+      top: 62px;
+      font-size: 18px;
+      font-weight: 700;
+      opacity: 0;
+      transition: opacity 0.24s ease;
+      min-width: 180px;
+    }
+
+    .bubble.show {
+      opacity: 1;
+    }
+
+    .flower {
+      position: absolute;
+      bottom: 18%;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #ffd2ec;
+      box-shadow:
+        -8px 0 0 #ffe6f5,
+        8px 0 0 #ffe6f5,
+        0 -8px 0 #ffc6e7,
+        0 8px 0 #ffc6e7;
+      opacity: 0.85;
+    }
+
+    .flower::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 7px;
+      height: 7px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: #ffd66a;
+    }
+
+    .cuicui {
+      position: absolute;
+      width: 188px;
+      height: 260px;
+      left: 100px;
+      top: 170px;
+      z-index: 3;
+      transition-property: left, top;
+      transition-timing-function: linear;
+      transition-duration: 0ms;
+      --dir: 1;
+    }
+
+    .shadow {
+      position: absolute;
+      left: 50%;
+      bottom: 14px;
+      width: 108px;
+      height: 22px;
+      border-radius: 50%;
+      transform: translateX(-50%);
+      background: rgba(21, 78, 20, 0.28);
+      filter: blur(2px);
+      transition: width 0.25s ease, opacity 0.25s ease;
+    }
+
+    .flip {
+      position: absolute;
+      inset: 0;
+      transform: scaleX(var(--dir));
+      transform-origin: center bottom;
+    }
+
+    .pose {
+      position: absolute;
+      left: 50%;
+      bottom: 24px;
+      width: 142px;
+      height: 210px;
+      transform: translateX(-50%);
+      transform-origin: center bottom;
+    }
+
+    .head {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 94px;
+      height: 94px;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      overflow: hidden;
+      border: 5px solid rgba(255, 255, 255, 0.95);
+      box-shadow: 0 10px 28px rgba(20, 57, 26, 0.28);
+      background: #fff;
+      z-index: 3;
+    }
+
+    .head img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .hair-tuft {
+      position: absolute;
+      top: -6px;
+      left: 50%;
+      width: 30px;
+      height: 22px;
+      transform: translateX(-50%) rotate(6deg);
+      border-radius: 50% 50% 14px 14px;
+      background: linear-gradient(180deg, #4a2f1d, #7b4d31);
+      z-index: 1;
+    }
+
+    .body-shape {
+      position: absolute;
+      top: 74px;
+      left: 50%;
+      width: 88px;
+      height: 94px;
+      transform: translateX(-50%);
+      border-radius: 40px 40px 34px 34px;
+      background: linear-gradient(180deg, #ffd283 0%, #ffb84a 100%);
+      box-shadow: inset 0 -10px 0 rgba(201, 122, 32, 0.2);
+      z-index: 2;
+    }
+
+    .belly {
+      position: absolute;
+      left: 50%;
+      top: 96px;
+      width: 46px;
+      height: 52px;
+      transform: translateX(-50%);
+      border-radius: 46% 46% 40% 40%;
+      background: rgba(255, 244, 208, 0.85);
+      z-index: 3;
+    }
+
+    .arm,
+    .leg {
+      position: absolute;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #ffcb72 0%, #f0a842 100%);
+      transform-origin: top center;
+      z-index: 1;
+    }
+
+    .arm {
+      top: 88px;
+      width: 22px;
+      height: 72px;
+    }
+
+    .arm.left {
+      left: 20px;
+      transform: rotate(16deg);
+    }
+
+    .arm.right {
+      right: 20px;
+      transform: rotate(-16deg);
+    }
+
+    .leg {
+      top: 148px;
+      width: 24px;
+      height: 68px;
+      z-index: 0;
+    }
+
+    .leg.left {
+      left: 44px;
+      transform: rotate(4deg);
+    }
+
+    .leg.right {
+      right: 44px;
+      transform: rotate(-4deg);
+    }
+
+    .foot {
+      position: absolute;
+      bottom: -3px;
+      left: 50%;
+      width: 34px;
+      height: 12px;
+      transform: translateX(-50%);
+      border-radius: 999px;
+      background: #c07a2b;
+    }
+
+    .action-prop {
+      position: absolute;
+      right: 8px;
+      top: 28px;
+      min-width: 54px;
+      padding: 8px 10px;
+      border-radius: 16px;
+      border: 1px solid rgba(24, 62, 20, 0.1);
+      background: rgba(255, 255, 255, 0.92);
+      color: #234726;
+      font-size: 14px;
+      font-weight: 700;
+      text-align: center;
+      box-shadow: 0 12px 24px rgba(19, 68, 25, 0.14);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      pointer-events: none;
+      z-index: 4;
+    }
+
+    .action-prop.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .status-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .status-badge {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(123, 204, 94, 0.15);
+      color: #255a28;
+      font-size: 14px;
+      font-weight: 700;
+      border: 1px solid rgba(66, 126, 53, 0.12);
+    }
+
+    .status-text {
+      font-size: 15px;
+      color: var(--text-soft);
+    }
+
+    .panel {
+      padding: 18px;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 12px;
+    }
+
+    button {
+      appearance: none;
+      border: 0;
+      border-radius: 16px;
+      padding: 13px 12px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(236, 251, 235, 0.95));
+      color: var(--text-main);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(43, 94, 36, 0.1);
+      transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba(43, 94, 36, 0.15);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(224, 248, 219, 1));
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .btn-accent {
+      background: linear-gradient(180deg, #fff2d8, #ffd891);
+    }
+
+    .btn-danger {
+      background: linear-gradient(180deg, #ffe3e3, #ffc1c1);
+      color: #7c2525;
+    }
+
+    .cuicui.is-moving .shadow {
+      width: 96px;
+      opacity: 0.78;
+    }
+
+    .cuicui.is-moving .pose {
+      animation: walk-bounce 0.36s infinite alternate;
+    }
+
+    .cuicui.is-moving .arm.left,
+    .cuicui.action-run .arm.left {
+      animation: arm-swing-left 0.32s infinite alternate;
+    }
+
+    .cuicui.is-moving .arm.right,
+    .cuicui.action-run .arm.right {
+      animation: arm-swing-right 0.32s infinite alternate;
+    }
+
+    .cuicui.is-moving .leg.left,
+    .cuicui.action-run .leg.left {
+      animation: leg-swing-left 0.32s infinite alternate;
+    }
+
+    .cuicui.is-moving .leg.right,
+    .cuicui.action-run .leg.right {
+      animation: leg-swing-right 0.32s infinite alternate;
+    }
+
+    .cuicui.mood-happy .head {
+      box-shadow: 0 10px 28px rgba(20, 57, 26, 0.28), 0 0 0 10px rgba(255, 225, 146, 0.22);
+    }
+
+    .cuicui.mood-happy .pose {
+      transform: translateX(-50%) rotate(-4deg);
+    }
+
+    .cuicui.mood-sad .pose {
+      transform: translateX(-50%) translateY(6px) rotate(6deg);
+    }
+
+    .cuicui.mood-sad .head img {
+      filter: saturate(0.78) brightness(0.92);
+    }
+
+    .cuicui.mood-sad .body-shape {
+      background: linear-gradient(180deg, #f6c979 0%, #d89a47 100%);
+    }
+
+    .cuicui.mood-grievance .pose {
+      transform: translateX(-50%) translateY(4px) rotate(3deg);
+    }
+
+    .cuicui.mood-grievance .head {
+      transform: translateX(-50%) rotate(-8deg);
+    }
+
+    .cuicui.action-jump .pose {
+      animation: jump-hop 0.52s ease-in-out 3;
+    }
+
+    .cuicui.action-run .pose {
+      animation: run-lean 0.22s infinite alternate;
+    }
+
+    .cuicui.action-pushup .pose {
+      animation: push-up 0.62s ease-in-out 4;
+    }
+
+    .cuicui.action-slap .pose {
+      animation: slap-shake 0.12s linear 8;
+    }
+
+    .cuicui.action-pet .pose {
+      animation: cuddle 0.72s ease-in-out 2;
+    }
+
+    .cuicui.action-feed .head,
+    .cuicui.action-water .head {
+      animation: nibble 0.44s ease-in-out 3;
+    }
+
+    @keyframes walk-bounce {
+      from { transform: translateX(-50%) translateY(0); }
+      to { transform: translateX(-50%) translateY(-9px); }
+    }
+
+    @keyframes arm-swing-left {
+      from { transform: rotate(26deg); }
+      to { transform: rotate(-10deg); }
+    }
+
+    @keyframes arm-swing-right {
+      from { transform: rotate(-26deg); }
+      to { transform: rotate(10deg); }
+    }
+
+    @keyframes leg-swing-left {
+      from { transform: rotate(12deg); }
+      to { transform: rotate(-12deg); }
+    }
+
+    @keyframes leg-swing-right {
+      from { transform: rotate(-12deg); }
+      to { transform: rotate(12deg); }
+    }
+
+    @keyframes jump-hop {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      40% { transform: translateX(-50%) translateY(-64px); }
+      55% { transform: translateX(-50%) translateY(-64px) scaleY(1.04); }
+      75% { transform: translateX(-50%) translateY(0) scaleY(0.96); }
+    }
+
+    @keyframes run-lean {
+      from { transform: translateX(-50%) translateY(-4px) rotate(4deg); }
+      to { transform: translateX(-50%) translateY(3px) rotate(-3deg); }
+    }
+
+    @keyframes push-up {
+      0%, 100% { transform: translateX(-50%) rotate(0deg) translateY(0); }
+      20% { transform: translateX(-50%) rotate(-78deg) translateY(10px); }
+      50% { transform: translateX(-50%) rotate(-78deg) translateY(32px); }
+      80% { transform: translateX(-50%) rotate(-78deg) translateY(10px); }
+    }
+
+    @keyframes slap-shake {
+      0%, 100% { transform: translateX(-50%) rotate(0deg); }
+      25% { transform: translateX(-50%) rotate(8deg); }
+      50% { transform: translateX(-50%) rotate(-8deg); }
+      75% { transform: translateX(-50%) rotate(6deg); }
+    }
+
+    @keyframes cuddle {
+      0%, 100% { transform: translateX(-50%) scale(1); }
+      50% { transform: translateX(-50%) scale(1.08); }
+    }
+
+    @keyframes nibble {
+      0%, 100% { transform: translateX(-50%) rotate(0deg); }
+      25% { transform: translateX(-50%) rotate(6deg); }
+      50% { transform: translateX(-50%) rotate(-4deg); }
+      75% { transform: translateX(-50%) rotate(3deg); }
+    }
+
+    @media (max-width: 800px) {
+      .app {
+        padding: 12px;
+      }
+
+      .scene {
+        height: 56vh;
+        min-height: 380px;
+      }
+
+      .cuicui {
+        width: 170px;
+        height: 240px;
+      }
+
+      .pose {
+        width: 132px;
+        height: 198px;
+      }
+
+      .actions {
+        grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+      }
+    }
+  </style>
 </head>
 <body>
-<div>
-    <div class="game-container">
-        <div class="stats">
-            <span>🐑 翠翠的草原乐园 🌾</span>
-            <div class="reset-area">
-                <button class="reset-btn" id="resetPosBtn">🏞️ 重置位置</button>
-                <button class="reset-btn" id="resetMoodBtn">💖 恢复心情</button>
+  <div class="app">
+    <header class="topbar">
+      <div class="title-wrap">
+        <h1>认养一只翠翠</h1>
+        <p>点击大草原上的任意位置，翠翠会自己走过去。下面按钮可以和她互动。</p>
+      </div>
+      <div class="stats">
+        <div class="stat-card">
+          <strong>亲密度</strong>
+          <span id="loveValue">60</span>
+        </div>
+        <div class="stat-card">
+          <strong>饱饱值</strong>
+          <span id="foodValue">58</span>
+        </div>
+        <div class="stat-card">
+          <strong>水润值</strong>
+          <span id="waterValue">62</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="scene-shell">
+      <section class="scene" id="scene">
+        <div class="sun"></div>
+        <div class="hint">点草地移动翠翠</div>
+        <div class="bubble" id="bubble">翠翠今天心情不错。</div>
+
+        <div class="flower" style="left: 7%; bottom: 17%;"></div>
+        <div class="flower" style="left: 15%; bottom: 25%;"></div>
+        <div class="flower" style="left: 26%; bottom: 20%;"></div>
+        <div class="flower" style="left: 42%; bottom: 14%;"></div>
+        <div class="flower" style="left: 63%; bottom: 18%;"></div>
+        <div class="flower" style="left: 74%; bottom: 24%;"></div>
+        <div class="flower" style="left: 88%; bottom: 19%;"></div>
+
+        <div class="cuicui mood-happy" id="cuicui">
+          <div class="shadow"></div>
+          <div class="flip">
+            <div class="pose">
+              <div class="hair-tuft"></div>
+              <div class="head">
+                <img src="./cuicui.jpg" alt="翠翠头像" />
+              </div>
+              <div class="arm left"></div>
+              <div class="arm right"></div>
+              <div class="body-shape"></div>
+              <div class="belly"></div>
+              <div class="leg left"><div class="foot"></div></div>
+              <div class="leg right"><div class="foot"></div></div>
             </div>
+          </div>
+          <div class="action-prop" id="actionProp"></div>
         </div>
-        <div class="canvas-wrapper">
-            <canvas id="gameCanvas" width="900" height="500" style="width:100%; height:auto; max-width:900px; aspect-ratio:900/500"></canvas>
-        </div>
-        <div class="action-panel" id="actionPanel">
-            <!-- 按钮们 动态绑定但直接在html里写好方便 -->
-        </div>
-        <div style="text-align: center; margin-top: 12px; font-size:12px; color:#e9f5cf;">✨ 点击草原任意处，翠翠会走过去 ✨</div>
-    </div>
-</div>
+      </section>
+    </main>
 
-<script>
-    (function(){
-        // ----- 画布元素 -----
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
+    <section class="panel">
+      <div class="status-line">
+        <div class="status-badge" id="moodBadge">当前状态：开心</div>
+        <div class="status-text" id="statusText">翠翠正在晒太阳，随时等你互动。</div>
+      </div>
+      <div class="actions">
+        <button data-action="happy">开心</button>
+        <button data-action="sad">伤心</button>
+        <button data-action="grievance">委屈</button>
+        <button data-action="jump" class="btn-accent">蹦高高</button>
+        <button data-action="run" class="btn-accent">奔跑</button>
+        <button data-action="pushup">俯卧撑</button>
+        <button data-action="feed">投喂食物</button>
+        <button data-action="water">喂水</button>
+        <button data-action="slap" class="btn-danger">抽耳光</button>
+        <button data-action="pet">爱的抚摸</button>
+      </div>
+    </section>
+  </div>
 
-        // 图片资源
-        const headImg = new Image();
-        headImg.src = './cuicui.jpg';   // 使用指定的翠翠头像图片
-        // 为了处理图片加载失败的情况，加一个默认后备绘制
-        let headLoaded = false;
-        headImg.onload = () => { headLoaded = true; drawGame(); };
-        headImg.onerror = () => { 
-            console.warn("未找到 ./cuicui.jpg , 将用可爱替代头绘制");
-            headLoaded = false; 
-            drawGame();
-        };
+  <script>
+    const scene = document.getElementById('scene');
+    const cuicui = document.getElementById('cuicui');
+    const bubble = document.getElementById('bubble');
+    const actionProp = document.getElementById('actionProp');
+    const moodBadge = document.getElementById('moodBadge');
+    const statusText = document.getElementById('statusText');
+    const loveValue = document.getElementById('loveValue');
+    const foodValue = document.getElementById('foodValue');
+    const waterValue = document.getElementById('waterValue');
 
-        // ----- 翠翠数据模型 -----
-        let cuiCui = {
-            x: 450,          // 画布坐标x (中心点坐标, 绘制基于身体中心)
-            y: 380,          // y 草原地面基准高度(身体底部大约位置，但动画微调)
-            destX: 450,      // 目标x
-            destY: 380,      // 目标y
-            moving: false,
-            emotion: "neutral", // neutral, happy, sad, aggrieved(委屈), jump, run, pushup
-            actionTimer: 0,    // 特殊动作计时帧数
-            // 情绪/状态辅助
-            lastInteraction: "",
-            happiness: 100,    // 开心值 0-120 影响表情倾向
-        };
-        
-        let animationId = null;
-        let showEmoji = null;   // {text, x, y, life}
-        let moveSpeed = 3.8;    // 每帧移动速度
+    const state = {
+      mood: 'happy',
+      action: '',
+      love: 60,
+      food: 58,
+      water: 62,
+      x: 100,
+      y: 170,
+      moving: false,
+      actionTimer: null,
+      bubbleTimer: null,
+      propTimer: null,
+      moveToken: 0,
+    };
 
-        // 按钮列表 (包含所有操作)
-        const actions = [
-            { id: "happy", label: "😊 开心", emoji: "😆💖", moodEffect: "happy" },
-            { id: "sad", label: "😢 伤心", emoji: "😭💧", moodEffect: "sad" },
-            { id: "wronged", label: "🥺 委屈", emoji: "🥺💔", moodEffect: "aggrieved" },
-            { id: "jump", label: "🦘 蹦高高", emoji: "✨🦘✨", moodEffect: "jump" },
-            { id: "run", label: "🏃‍♀️ 奔跑", emoji: "💨🏃‍♀️", moodEffect: "run" },
-            { id: "pushup", label: "💪 俯卧撑", emoji: "🤸‍♂️💪", moodEffect: "pushup" },
-            { id: "feed", label: "🍎 投喂食物", emoji: "🍎🍬", moodEffect: "feed" },
-            { id: "water", label: "💧 喂水", emoji: "💧🚰", moodEffect: "water" },
-            { id: "slap", label: "👋 抽耳光", emoji: "💥👋", moodEffect: "slap" },
-            { id: "caress", label: "🤗 爱的抚摸", emoji: "💗✨", moodEffect: "caress" }
-        ];
+    const moodTextMap = {
+      happy: '开心',
+      sad: '伤心',
+      grievance: '委屈',
+    };
 
-        // 情绪相关辅助
-        function applyMoodEffect(actionId, moodEffectType) {
-            // 先停止当前特殊动作 (保留移动)
-            if(cuiCui.actionTimer > 0) cuiCui.actionTimer = 0;
-            // 不同行为影响翠翠的情绪值和表情动画
-            switch(moodEffectType) {
-                case "happy": 
-                    cuiCui.happiness = Math.min(120, cuiCui.happiness + 12);
-                    setEmotionAndAction("happy", "happy", 28);
-                    showFloatingEmoji("😊 开心到转圈");
-                    break;
-                case "sad": 
-                    cuiCui.happiness = Math.max(0, cuiCui.happiness - 15);
-                    setEmotionAndAction("sad", "sad", 35);
-                    showFloatingEmoji("😢 呜呜...");
-                    break;
-                case "aggrieved": 
-                    cuiCui.happiness = Math.max(0, cuiCui.happiness - 8);
-                    setEmotionAndAction("aggrieved", "aggrieved", 40);
-                    showFloatingEmoji("🥺 委屈巴巴");
-                    break;
-                case "jump": 
-                    setEmotionAndAction("jump", "jump", 25);
-                    showFloatingEmoji("🦘 蹦高高~");
-                    // 跳跃时微微上扬坐标效果(不影响实际移动，仅视觉)
-                    break;
-                case "run": 
-                    setEmotionAndAction("run", "run", 30);
-                    showFloatingEmoji("💨 奔跑冲刺!");
-                    // 增加移速短暂?
-                    break;
-                case "pushup": 
-                    setEmotionAndAction("pushup", "pushup", 45);
-                    showFloatingEmoji("💪 俯卧撑好厉害");
-                    break;
-                case "feed":
-                    cuiCui.happiness = Math.min(120, cuiCui.happiness + 18);
-                    setEmotionAndAction("happy", "happy", 25);
-                    showFloatingEmoji("🍎 啊呜~ 好好吃");
-                    break;
-                case "water":
-                    cuiCui.happiness = Math.min(120, cuiCui.happiness + 10);
-                    setEmotionAndAction("happy", "happy", 22);
-                    showFloatingEmoji("💧 咕噜咕噜~");
-                    break;
-                case "slap":
-                    cuiCui.happiness = Math.max(0, cuiCui.happiness - 25);
-                    setEmotionAndAction("sad", "sad", 40);
-                    showFloatingEmoji("😭 呜哇！好疼！");
-                    break;
-                case "caress":
-                    cuiCui.happiness = Math.min(120, cuiCui.happiness + 22);
-                    setEmotionAndAction("happy", "happy", 35);
-                    showFloatingEmoji("🤗❤️ 蹭蹭~ 好舒服");
-                    break;
-                default: break;
-            }
-            // 防止数值越界
-            cuiCui.happiness = Math.min(120, Math.max(0, cuiCui.happiness));
-            drawGame();
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function setBubble(text, duration = 1600) {
+      bubble.textContent = text;
+      bubble.classList.add('show');
+      clearTimeout(state.bubbleTimer);
+      state.bubbleTimer = setTimeout(() => {
+        bubble.classList.remove('show');
+      }, duration);
+    }
+
+    function showProp(text, duration = 1200) {
+      actionProp.textContent = text;
+      actionProp.classList.add('show');
+      clearTimeout(state.propTimer);
+      state.propTimer = setTimeout(() => {
+        actionProp.classList.remove('show');
+      }, duration);
+    }
+
+    function renderStats() {
+      loveValue.textContent = state.love;
+      foodValue.textContent = state.food;
+      waterValue.textContent = state.water;
+    }
+
+    function renderMood() {
+      cuicui.classList.remove('mood-happy', 'mood-sad', 'mood-grievance');
+      cuicui.classList.add(`mood-${state.mood}`);
+      moodBadge.textContent = `当前状态：${moodTextMap[state.mood] || '开心'}`;
+    }
+
+    function setMood(mood, text) {
+      state.mood = mood;
+      renderMood();
+      statusText.textContent = text;
+      setBubble(text, 1800);
+    }
+
+    function clearAction() {
+      if (!state.action) return;
+      cuicui.classList.remove(
+        'action-jump',
+        'action-run',
+        'action-pushup',
+        'action-feed',
+        'action-water',
+        'action-slap',
+        'action-pet'
+      );
+      state.action = '';
+    }
+
+    function setAction(actionClass, duration) {
+      clearTimeout(state.actionTimer);
+      clearAction();
+      if (!actionClass) return;
+      state.action = actionClass;
+      cuicui.classList.add(`action-${actionClass}`);
+      state.actionTimer = setTimeout(() => {
+        if (state.action === actionClass) {
+          clearAction();
         }
+      }, duration);
+    }
 
-        function setEmotionAndAction(emotionStr, actionAnim, durationFrames) {
-            cuiCui.emotion = emotionStr;
-            if(cuiCui.actionTimer <= 0) cuiCui.actionTimer = durationFrames;
-            else cuiCui.actionTimer = Math.max(cuiCui.actionTimer, durationFrames);
-        }
+    function faceTo(targetX) {
+      cuicui.style.setProperty('--dir', targetX >= state.x ? '1' : '-1');
+    }
 
-        function showFloatingEmoji(text) {
-            const canvasRect = canvas.getBoundingClientRect();
-            const scaleX = canvas.width / canvasRect.width;
-            const scaleY = canvas.height / canvasRect.height;
-            // 在翠翠头上显示
-            let screenX = cuiCui.x;
-            let screenY = cuiCui.y - 60;
-            showEmoji = {
-                text: text,
-                x: screenX,
-                y: screenY,
-                life: 45   // 帧数存活
-            };
-        }
+    function moveTo(targetX, targetY, speed = 260, note = '翠翠正慢悠悠走过去。') {
+      const dx = targetX - state.x;
+      const dy = targetY - state.y;
+      const distance = Math.hypot(dx, dy);
+      const duration = Math.max(320, Math.round((distance / speed) * 1000));
+      const token = ++state.moveToken;
 
-        // 处理点击草原移动
-        function handleCanvasClick(e) {
-            const rect = canvas.getBoundingClientRect();
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
-            let clickX = (e.clientX - rect.left) * scaleX;
-            let clickY = (e.clientY - rect.top) * scaleY;
-            // 边界裁剪，确保在草原范围内 (画布内)
-            clickX = Math.min(canvas.width - 40, Math.max(40, clickX));
-            clickY = Math.min(canvas.height - 70, Math.max(150, clickY));
-            cuiCui.destX = clickX;
-            cuiCui.destY = clickY;
-            cuiCui.moving = true;
-            // 如果正在进行特殊动作且不是奔跑类动作，移动时适当保留动作但移动优先，停止特殊动作动画?
-            if(cuiCui.actionTimer > 0 && cuiCui.emotion !== "run") {
-                // 温柔打断非奔跑动作
-                cuiCui.actionTimer = 0;
-                cuiCui.emotion = "neutral";
-            }
-            drawGame();
-        }
+      faceTo(targetX);
+      state.moving = true;
+      cuicui.classList.add('is-moving');
+      cuicui.style.transitionDuration = `${duration}ms`;
+      cuicui.style.left = `${targetX}px`;
+      cuicui.style.top = `${targetY}px`;
+      state.x = targetX;
+      state.y = targetY;
+      statusText.textContent = note;
 
-        // 移动逻辑
-        function updateMovement() {
-            if(!cuiCui.moving) return false;
-            let dx = cuiCui.destX - cuiCui.x;
-            let dy = cuiCui.destY - cuiCui.y;
-            let distance = Math.hypot(dx, dy);
-            if(distance < 2.5) {
-                cuiCui.x = cuiCui.destX;
-                cuiCui.y = cuiCui.destY;
-                cuiCui.moving = false;
-                return false;
-            }
-            let step = Math.min(moveSpeed, distance);
-            let angle = Math.atan2(dy, dx);
-            cuiCui.x += Math.cos(angle) * step;
-            cuiCui.y += Math.sin(angle) * step;
-            // 边界二次保护
-            cuiCui.x = Math.min(canvas.width - 35, Math.max(35, cuiCui.x));
-            cuiCui.y = Math.min(canvas.height - 55, Math.max(140, cuiCui.y));
-            return true;
+      window.setTimeout(() => {
+        if (state.moveToken !== token) return;
+        state.moving = false;
+        cuicui.classList.remove('is-moving');
+        if (state.action === 'run') {
+          clearAction();
         }
+        statusText.textContent = `翠翠已经走到这里了，${moodTextMap[state.mood]}地看着你。`;
+      }, duration + 30);
+    }
 
-        // 动画计时更新
-        function updateActionTimer() {
-            if(cuiCui.actionTimer > 0) {
-                cuiCui.actionTimer--;
-                if(cuiCui.actionTimer <= 0) {
-                    cuiCui.emotion = "neutral";
-                }
-            }
-            if(showEmoji) {
-                showEmoji.life--;
-                if(showEmoji.life <= 0) showEmoji = null;
-                else showEmoji.y -= 1.2;
-            }
-        }
+    function randomWalkByRun() {
+      const rect = scene.getBoundingClientRect();
+      const maxX = rect.width - 170;
+      const maxY = rect.height - 230;
+      const minY = Math.max(72, rect.height * 0.28);
+      const offset = Math.random() > 0.5 ? 180 : -180;
+      const targetX = clamp(state.x + offset, 18, maxX);
+      const targetY = clamp(state.y + (Math.random() * 60 - 30), minY, maxY);
+      moveTo(targetX, targetY, 480, '翠翠突然撒欢奔跑起来了。');
+    }
 
-        // ---------- 绘画核心: 画翠翠的身体+头（用cuicui.jpg） 身体可爱风格 ----------
-        function drawGame() {
-            if(!canvas) return;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            // 画大草原 (草地纹理)
-            drawPrairie();
-            // 画小花小草装饰
-            drawGrassAndFlowers();
-            
-            // 绘制翠翠的身体 + 四肢 + 表情 基于当前情绪/动作
-            drawCuicuiFull();
-            
-            // 漂浮表情气泡
-            if(showEmoji) {
-                ctx.font = "bold 28px 'Segoe UI Emoji'";
-                ctx.shadowBlur = 0;
-                ctx.fillStyle = "#fff9e8";
-                ctx.shadowColor = "black";
-                ctx.shadowBlur = 4;
-                ctx.fillText(showEmoji.text, showEmoji.x - 30, showEmoji.y - 15);
-                ctx.fillStyle = "#2d2b1f";
-                ctx.shadowBlur = 2;
-                ctx.fillText(showEmoji.text, showEmoji.x - 31, showEmoji.y - 16);
-                ctx.shadowBlur = 0;
-            }
-            
-            // 快乐值小挂件
-            ctx.font = "bold 14px monospace";
-            ctx.fillStyle = "#FFFACD";
-            ctx.shadowBlur = 2;
-            ctx.fillText(`❤️ 心情值: ${cuiCui.happiness}`, 20, 40);
-            if(cuiCui.happiness < 30) ctx.fillStyle = "#ffae70";
-            ctx.fillText(`❤️ 心情值: ${cuiCui.happiness}`, 20, 40);
-            ctx.shadowBlur = 0;
-        }
-        
-        function drawPrairie() {
-            // 草地渐变
-            const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-            grad.addColorStop(0, "#b8e45c");
-            grad.addColorStop(1, "#7cb53e");
-            ctx.fillStyle = grad;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            // 小草细纹
-            ctx.strokeStyle = "#558b2f";
-            ctx.lineWidth = 1;
-            for(let i=0;i<120;i++) {
-                let x = (i*23)%canvas.width;
-                let y = canvas.height-30 + Math.sin(i)*8;
-                ctx.beginPath();
-                ctx.moveTo(x, canvas.height-25);
-                ctx.lineTo(x+4, y-12);
-                ctx.lineTo(x-4, y-10);
-                ctx.fillStyle = "#6f9e37";
-                ctx.fill();
-            }
-        }
-        
-        function drawGrassAndFlowers() {
-            for(let i=0;i<60;i++) {
-                let x = (i*37)%canvas.width;
-                let yOff = Math.sin(i)*6;
-                ctx.beginPath();
-                ctx.fillStyle = ["#FFD966","#F4A261","#E9C46A"][i%3];
-                ctx.arc(x+12, canvas.height-28+yOff, 3, 0, Math.PI*2);
-                ctx.fill();
-                ctx.fillStyle = "#a7c957";
-                ctx.beginPath();
-                ctx.rect(x+10, canvas.height-32+yOff, 2, 6);
-                ctx.fill();
-            }
-        }
+    function changeValue(key, delta) {
+      state[key] = clamp(state[key] + delta, 0, 100);
+      renderStats();
+    }
 
-        // 绘制翠翠身体部分+头部使用图片
-        function drawCuicuiFull() {
-            const x = cuiCui.x;
-            const y = cuiCui.y;
-            // 动态动作影响身体形态 (俯卧撑时压低, 蹦高时偏移)
-            let bodyOffsetY = 0;
-            let legOffset = 0;
-            let armAngle = 0;
-            let isSpecialAnim = cuiCui.actionTimer > 0;
-            let animFrame = cuiCui.actionTimer;
-            let t = (Date.now() / 80) % 20;
-            
-            if(cuiCui.emotion === "jump" && isSpecialAnim) {
-                bodyOffsetY = -Math.sin(t*2)*5 - 3;
-            } else if(cuiCui.emotion === "run" && isSpecialAnim) {
-                bodyOffsetY = Math.sin(t*3)*2;
-                legOffset = Math.sin(t*5)*6;
-            } else if(cuiCui.emotion === "pushup" && isSpecialAnim) {
-                bodyOffsetY = 12;
-            } else if(cuiCui.emotion === "happy") {
-                // 开心摇晃
-                bodyOffsetY = Math.sin(t*4)*1.5;
-            } else if(cuiCui.emotion === "sad") {
-                bodyOffsetY = 2;
-            }
-            
-            // 绘制身体 (椭圆胖身子)
-            ctx.save();
-            ctx.shadowBlur = 4;
-            ctx.shadowColor = "rgba(0,0,0,0.3)";
-            ctx.beginPath();
-            ctx.ellipse(x, y+5+bodyOffsetY, 28, 32, 0, 0, Math.PI*2);
-            ctx.fillStyle = "#e0b074";
-            ctx.fill();
-            ctx.fillStyle = "#c98f5e";
-            ctx.beginPath();
-            ctx.ellipse(x-2, y+2+bodyOffsetY, 8, 12, 0, 0, Math.PI*2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.ellipse(x+2, y+2+bodyOffsetY, 8, 12, 0, 0, Math.PI*2);
-            ctx.fill();
-            // 肚子
-            ctx.fillStyle = "#f5cf9b";
-            ctx.beginPath();
-            ctx.ellipse(x, y+8+bodyOffsetY, 22, 24, 0, 0, Math.PI*2);
-            ctx.fill();
-            
-            // 画腿 根据奔跑/俯卧撑动效
-            if(cuiCui.emotion === "pushup" && isSpecialAnim) {
-                ctx.fillStyle = "#b47c48";
-                ctx.fillRect(x-20, y+25+bodyOffsetY, 14, 8);
-                ctx.fillRect(x+6, y+25+bodyOffsetY, 14, 8);
-                ctx.fillStyle = "#9c5e32";
-                ctx.fillRect(x-18, y+32+bodyOffsetY, 10, 6);
-                ctx.fillRect(x+8, y+32+bodyOffsetY, 10, 6);
-            } else {
-                let legShift = legOffset;
-                ctx.fillStyle = "#b47c48";
-                ctx.fillRect(x-18, y+28+bodyOffsetY+legShift*0.5, 12, 14);
-                ctx.fillRect(x+6, y+28+bodyOffsetY-legShift*0.5, 12, 14);
-                ctx.fillStyle = "#9c5e32";
-                ctx.fillRect(x-17, y+38+bodyOffsetY+legShift*0.3, 8, 8);
-                ctx.fillRect(x+7, y+38+bodyOffsetY-legShift*0.3, 8, 8);
-            }
-            // 手臂 依据动作
-            ctx.fillStyle = "#d89f64";
-            if(cuiCui.emotion === "happy" && isSpecialAnim) {
-                ctx.fillRect(x-34, y-4+bodyOffsetY, 22, 12);
-                ctx.fillRect(x+12, y-4+bodyOffsetY, 22, 12);
-                ctx.fillStyle = "#c28648";
-                ctx.fillRect(x-32, y+1+bodyOffsetY, 18, 8);
-                ctx.fillRect(x+14, y+1+bodyOffsetY, 18, 8);
-            } else if(cuiCui.emotion === "run" && isSpecialAnim){
-                let armWave = Math.sin(t*6)*12;
-                ctx.fillRect(x-36+armWave*0.3, y-2+bodyOffsetY, 18, 10);
-                ctx.fillRect(x+18-armWave*0.3, y-2+bodyOffsetY, 18, 10);
-            } else if(cuiCui.emotion === "pushup" && isSpecialAnim){
-                ctx.fillRect(x-28, y+14+bodyOffsetY, 20, 8);
-                ctx.fillRect(x+8, y+14+bodyOffsetY, 20, 8);
-            } else {
-                ctx.fillRect(x-32, y-2+bodyOffsetY, 20, 12);
-                ctx.fillRect(x+12, y-2+bodyOffsetY, 20, 12);
-            }
-            
-            // 头部: 使用 ./cuicui.jpg  绘制圆形区域 + 图片
-            const headRadius = 36;
-            const headX = x;
-            const headY = y - 18 + (bodyOffsetY*0.5);
-            ctx.save();
-            ctx.beginPath();
-            ctx.arc(headX, headY, headRadius, 0, Math.PI*2);
-            ctx.closePath();
-            ctx.clip();
-            if(headLoaded && headImg.complete && headImg.naturalWidth>0) {
-                ctx.drawImage(headImg, headX-headRadius, headY-headRadius, headRadius*2, headRadius*2);
-            } else {
-                ctx.fillStyle = "#f7bc6d";
-                ctx.fillRect(headX-headRadius, headY-headRadius, headRadius*2, headRadius*2);
-                ctx.fillStyle = "#a56135";
-                ctx.font = "22px sans-serif";
-                ctx.fillText("🐑", headX-14, headY+10);
-            }
-            ctx.restore();
-            // 加耳朵
-            ctx.fillStyle = "#e6a467";
-            ctx.beginPath();
-            ctx.ellipse(headX-26, headY-18, 12, 16, -0.3, 0, Math.PI*2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.ellipse(headX+26, headY-18, 12, 16, 0.3, 0, Math.PI*2);
-            ctx.fill();
-            
-            // 绘制表情 (根据情绪覆盖在图片上或者叠加)
-            ctx.font = "28px 'Segoe UI Emoji'";
-            ctx.fillStyle = "#2e241f";
-            ctx.shadowBlur = 2;
-            let eyeX = headX-12, eyeY = headY-6;
-            let eyeX2 = headX+12;
-            if(cuiCui.emotion === "happy") {
-                ctx.fillText("😊", headX-18, headY+6);
-            } else if(cuiCui.emotion === "sad") {
-                ctx.fillText("😢", headX-18, headY+6);
-            } else if(cuiCui.emotion === "aggrieved") {
-                ctx.fillText("🥺", headX-18, headY+6);
-            } else {
-                ctx.fillText("◕‿◕", headX-18, headY+8);
-            }
-            ctx.restore();
-            // 额外腮红
-            ctx.fillStyle = "#f7aca7";
-            ctx.beginPath();
-            ctx.ellipse(headX-22, headY+4, 5, 4, 0, 0, Math.PI*2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.ellipse(headX+22, headY+4, 5, 4, 0, 0, Math.PI*2);
-            ctx.fill();
-        }
+    function performAction(action) {
+      if (action === 'happy') {
+        changeValue('love', 6);
+        setMood('happy', '翠翠乐开了花，摇头晃脑地冲你笑。');
+        return;
+      }
 
-        // 渲染循环
-        function animate() {
-            updateMovement();
-            updateActionTimer();
-            drawGame();
-            requestAnimationFrame(animate);
-        }
-        
-        // 初始化UI按钮
-        function initButtons() {
-            const panel = document.getElementById('actionPanel');
-            panel.innerHTML = '';
-            actions.forEach(act => {
-                const btn = document.createElement('button');
-                btn.className = 'action-btn';
-                btn.innerHTML = act.label;
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    applyMoodEffect(act.id, act.moodEffect);
-                    // 如果是奔跑操作，强制让翠翠移动时增加一点额外速度奔跑感觉：设定目标向随机方向移动？不过为了体验，直接让翠翠向前小跑?可选
-                    if(act.id === "run") {
-                        let randDirX = cuiCui.x + (Math.random() - 0.5)*140;
-                        let randDirY = cuiCui.y + (Math.random() - 0.5)*80;
-                        randDirX = Math.min(canvas.width-40, Math.max(40, randDirX));
-                        randDirY = Math.min(canvas.height-70, Math.max(150, randDirY));
-                        cuiCui.destX = randDirX;
-                        cuiCui.destY = randDirY;
-                        cuiCui.moving = true;
-                    } else if(act.id === "jump") {
-                        // 原地小蹦
-                        cuiCui.actionTimer = 12;
-                    }
-                    drawGame();
-                });
-                panel.appendChild(btn);
-            });
-            document.getElementById('resetPosBtn').addEventListener('click', ()=>{
-                cuiCui.x = 450; cuiCui.y = 380;
-                cuiCui.destX = 450; cuiCui.destY = 380;
-                cuiCui.moving = false;
-                drawGame();
-            });
-            document.getElementById('resetMoodBtn').addEventListener('click', ()=>{
-                cuiCui.happiness = 100;
-                cuiCui.emotion = "neutral";
-                cuiCui.actionTimer = 0;
-                showFloatingEmoji("✨ 心情恢复啦 ✨");
-                drawGame();
-            });
-        }
-        
-        canvas.addEventListener('click', handleCanvasClick);
-        initButtons();
-        // 默认目标初始化
-        cuiCui.destX = cuiCui.x;
-        cuiCui.destY = cuiCui.y;
-        animate();
-        // 初始绘制
-        headImg.onload = ()=>drawGame();
-        headImg.onerror = ()=>drawGame();
-        drawGame();
-    })();
-</script>
+      if (action === 'sad') {
+        changeValue('love', -4);
+        setMood('sad', '翠翠低下脑袋，像是有点失落。');
+        return;
+      }
+
+      if (action === 'grievance') {
+        changeValue('love', -2);
+        setMood('grievance', '翠翠扁着嘴看你，一副很委屈的样子。');
+        return;
+      }
+
+      if (action === 'jump') {
+        setAction('jump', 1700);
+        changeValue('love', 4);
+        setMood('happy', '翠翠原地蹦高高，开心得停不下来。');
+        return;
+      }
+
+      if (action === 'run') {
+        setAction('run', 2400);
+        changeValue('food', -4);
+        changeValue('water', -3);
+        setMood('happy', '翠翠开启大草原冲刺模式。');
+        randomWalkByRun();
+        return;
+      }
+
+      if (action === 'pushup') {
+        setAction('pushup', 2500);
+        changeValue('food', -6);
+        changeValue('water', -4);
+        changeValue('love', 2);
+        setMood('happy', '翠翠认真做起了俯卧撑，练得很投入。');
+        return;
+      }
+
+      if (action === 'feed') {
+        setAction('feed', 1600);
+        showProp('食物');
+        changeValue('food', 14);
+        changeValue('love', 5);
+        setMood('happy', '翠翠大口吃起了你投喂的食物。');
+        return;
+      }
+
+      if (action === 'water') {
+        setAction('water', 1600);
+        showProp('水');
+        changeValue('water', 16);
+        changeValue('love', 3);
+        setMood('happy', '翠翠喝到了水，整只都精神了。');
+        return;
+      }
+
+      if (action === 'slap') {
+        setAction('slap', 1000);
+        changeValue('love', -14);
+        setMood('sad', '翠翠被打懵了，委委屈屈地躲开一点。');
+        const rect = scene.getBoundingClientRect();
+        const targetX = clamp(state.x + 60, 18, rect.width - 170);
+        moveTo(targetX, state.y, 340, '翠翠捂着脑袋往旁边躲。');
+        return;
+      }
+
+      if (action === 'pet') {
+        setAction('pet', 1600);
+        changeValue('love', 12);
+        setMood('happy', '翠翠被你摸得眯起眼睛，靠过来撒娇。');
+      }
+    }
+
+    scene.addEventListener('click', (event) => {
+      const rect = scene.getBoundingClientRect();
+      const maxX = rect.width - 170;
+      const maxY = rect.height - 230;
+      const minY = Math.max(72, rect.height * 0.28);
+      const targetX = clamp(event.clientX - rect.left - 90, 18, maxX);
+      const targetY = clamp(event.clientY - rect.top - 170, minY, maxY);
+      moveTo(targetX, targetY, state.action === 'run' ? 480 : 260, '翠翠收到你的指令，正穿过草原走来。');
+      setBubble('收到，翠翠这就过去。');
+    });
+
+    document.querySelector('.actions').addEventListener('click', (event) => {
+      const button = event.target.closest('button[data-action]');
+      if (!button) return;
+      performAction(button.dataset.action);
+    });
+
+    window.addEventListener('resize', () => {
+      const rect = scene.getBoundingClientRect();
+      state.x = clamp(state.x, 18, rect.width - 170);
+      state.y = clamp(state.y, Math.max(72, rect.height * 0.28), rect.height - 230);
+      cuicui.style.left = `${state.x}px`;
+      cuicui.style.top = `${state.y}px`;
+    });
+
+    function init() {
+      renderStats();
+      renderMood();
+      cuicui.style.left = `${state.x}px`;
+      cuicui.style.top = `${state.y}px`;
+      cuicui.style.setProperty('--dir', '1');
+      setBubble('翠翠已经在草原上等你了。', 2200);
+    }
+
+    init();
+  </script>
 </body>
 </html>
