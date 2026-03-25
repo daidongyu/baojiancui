@@ -114,8 +114,8 @@
 
     .scene {
       position: relative;
-      height: min(64vh, 720px);
-      min-height: 420px;
+      height: min(80vh, 900px);
+      min-height: 500px;
       border-radius: 28px;
       overflow: hidden;
       cursor: crosshair;
@@ -223,8 +223,8 @@
 
     .cuicui {
       position: absolute;
-      width: 188px;
-      height: 260px;
+      width: 94px;
+      height: 130px;
       left: 100px;
       top: 170px;
       z-index: 3;
@@ -237,9 +237,9 @@
     .shadow {
       position: absolute;
       left: 50%;
-      bottom: 14px;
-      width: 108px;
-      height: 22px;
+      bottom: 7px;
+      width: 54px;
+      height: 11px;
       border-radius: 50%;
       transform: translateX(-50%);
       background: rgba(21, 78, 20, 0.28);
@@ -257,9 +257,9 @@
     .pose {
       position: absolute;
       left: 50%;
-      bottom: 24px;
-      width: 142px;
-      height: 210px;
+      bottom: 12px;
+      width: 71px;
+      height: 105px;
       transform: translateX(-50%);
       transform-origin: center bottom;
     }
@@ -268,13 +268,13 @@
       position: absolute;
       top: 0;
       left: 50%;
-      width: 94px;
-      height: 94px;
+      width: 47px;
+      height: 47px;
       transform: translateX(-50%);
       border-radius: 50%;
       overflow: hidden;
-      border: 5px solid rgba(255, 255, 255, 0.95);
-      box-shadow: 0 10px 28px rgba(20, 57, 26, 0.28);
+      border: 3px solid rgba(255, 255, 255, 0.95);
+      box-shadow: 0 5px 14px rgba(20, 57, 26, 0.28);
       background: #fff;
       z-index: 3;
     }
@@ -288,35 +288,35 @@
 
     .hair-tuft {
       position: absolute;
-      top: -6px;
+      top: -3px;
       left: 50%;
-      width: 30px;
-      height: 22px;
+      width: 15px;
+      height: 11px;
       transform: translateX(-50%) rotate(6deg);
-      border-radius: 50% 50% 14px 14px;
+      border-radius: 50% 50% 7px 7px;
       background: linear-gradient(180deg, #4a2f1d, #7b4d31);
       z-index: 1;
     }
 
     .body-shape {
       position: absolute;
-      top: 74px;
+      top: 37px;
       left: 50%;
-      width: 88px;
-      height: 94px;
+      width: 44px;
+      height: 47px;
       transform: translateX(-50%);
-      border-radius: 40px 40px 34px 34px;
+      border-radius: 20px 20px 17px 17px;
       background: linear-gradient(180deg, #ffd283 0%, #ffb84a 100%);
-      box-shadow: inset 0 -10px 0 rgba(201, 122, 32, 0.2);
+      box-shadow: inset 0 -5px 0 rgba(201, 122, 32, 0.2);
       z-index: 2;
     }
 
     .belly {
       position: absolute;
       left: 50%;
-      top: 96px;
-      width: 46px;
-      height: 52px;
+      top: 48px;
+      width: 23px;
+      height: 26px;
       transform: translateX(-50%);
       border-radius: 46% 46% 40% 40%;
       background: rgba(255, 244, 208, 0.85);
@@ -333,44 +333,44 @@
     }
 
     .arm {
-      top: 88px;
-      width: 22px;
-      height: 72px;
+      top: 44px;
+      width: 11px;
+      height: 36px;
     }
 
     .arm.left {
-      left: 20px;
+      left: 10px;
       transform: rotate(16deg);
     }
 
     .arm.right {
-      right: 20px;
+      right: 10px;
       transform: rotate(-16deg);
     }
 
     .leg {
-      top: 148px;
-      width: 24px;
-      height: 68px;
+      top: 74px;
+      width: 12px;
+      height: 34px;
       z-index: 0;
     }
 
     .leg.left {
-      left: 44px;
+      left: 22px;
       transform: rotate(4deg);
     }
 
     .leg.right {
-      right: 44px;
+      right: 22px;
       transform: rotate(-4deg);
     }
 
     .foot {
       position: absolute;
-      bottom: -3px;
+      bottom: -2px;
       left: 50%;
-      width: 34px;
-      height: 12px;
+      width: 17px;
+      height: 6px;
       transform: translateX(-50%);
       border-radius: 999px;
       background: #c07a2b;
@@ -378,20 +378,20 @@
 
     .action-prop {
       position: absolute;
-      right: 8px;
-      top: 28px;
-      min-width: 54px;
-      padding: 8px 10px;
-      border-radius: 16px;
+      right: 4px;
+      top: 14px;
+      min-width: 27px;
+      padding: 4px 5px;
+      border-radius: 8px;
       border: 1px solid rgba(24, 62, 20, 0.1);
       background: rgba(255, 255, 255, 0.92);
       color: #234726;
-      font-size: 14px;
+      font-size: 7px;
       font-weight: 700;
       text-align: center;
-      box-shadow: 0 12px 24px rgba(19, 68, 25, 0.14);
+      box-shadow: 0 6px 12px rgba(19, 68, 25, 0.14);
       opacity: 0;
-      transform: translateY(8px);
+      transform: translateY(4px);
       transition: opacity 0.2s ease, transform 0.2s ease;
       pointer-events: none;
       z-index: 4;
@@ -469,7 +469,7 @@
     }
 
     .cuicui.is-moving .shadow {
-      width: 96px;
+      width: 48px;
       opacity: 0.78;
     }
 
@@ -552,46 +552,46 @@
 
     @keyframes walk-bounce {
       from { transform: translateX(-50%) translateY(0); }
-      to { transform: translateX(-50%) translateY(-9px); }
+      to { transform: translateX(-50%) translateY(-18px); }
     }
 
     @keyframes arm-swing-left {
-      from { transform: rotate(26deg); }
-      to { transform: rotate(-10deg); }
+      from { transform: rotate(50deg); }
+      to { transform: rotate(-30deg); }
     }
 
     @keyframes arm-swing-right {
-      from { transform: rotate(-26deg); }
-      to { transform: rotate(10deg); }
+      from { transform: rotate(-50deg); }
+      to { transform: rotate(30deg); }
     }
 
     @keyframes leg-swing-left {
-      from { transform: rotate(12deg); }
-      to { transform: rotate(-12deg); }
+      from { transform: rotate(30deg); }
+      to { transform: rotate(-30deg); }
     }
 
     @keyframes leg-swing-right {
-      from { transform: rotate(-12deg); }
-      to { transform: rotate(12deg); }
+      from { transform: rotate(-30deg); }
+      to { transform: rotate(30deg); }
     }
 
     @keyframes jump-hop {
       0%, 100% { transform: translateX(-50%) translateY(0); }
-      40% { transform: translateX(-50%) translateY(-64px); }
-      55% { transform: translateX(-50%) translateY(-64px) scaleY(1.04); }
-      75% { transform: translateX(-50%) translateY(0) scaleY(0.96); }
+      40% { transform: translateX(-50%) translateY(-120px); }
+      55% { transform: translateX(-50%) translateY(-120px) scaleY(1.1); }
+      75% { transform: translateX(-50%) translateY(0) scaleY(0.9); }
     }
 
     @keyframes run-lean {
-      from { transform: translateX(-50%) translateY(-4px) rotate(4deg); }
-      to { transform: translateX(-50%) translateY(3px) rotate(-3deg); }
+      from { transform: translateX(-50%) translateY(-8px) rotate(12deg); }
+      to { transform: translateX(-50%) translateY(6px) rotate(-10deg); }
     }
 
     @keyframes push-up {
       0%, 100% { transform: translateX(-50%) rotate(0deg) translateY(0); }
-      20% { transform: translateX(-50%) rotate(-78deg) translateY(10px); }
-      50% { transform: translateX(-50%) rotate(-78deg) translateY(32px); }
-      80% { transform: translateX(-50%) rotate(-78deg) translateY(10px); }
+      20% { transform: translateX(-50%) rotate(-90deg) translateY(20px); }
+      50% { transform: translateX(-50%) rotate(-90deg) translateY(60px); }
+      80% { transform: translateX(-50%) rotate(-90deg) translateY(20px); }
     }
 
     @keyframes slap-shake {
@@ -603,14 +603,14 @@
 
     @keyframes cuddle {
       0%, 100% { transform: translateX(-50%) scale(1); }
-      50% { transform: translateX(-50%) scale(1.08); }
+      50% { transform: translateX(-50%) scale(1.2); }
     }
 
     @keyframes nibble {
       0%, 100% { transform: translateX(-50%) rotate(0deg); }
-      25% { transform: translateX(-50%) rotate(6deg); }
-      50% { transform: translateX(-50%) rotate(-4deg); }
-      75% { transform: translateX(-50%) rotate(3deg); }
+      25% { transform: translateX(-50%) rotate(15deg); }
+      50% { transform: translateX(-50%) rotate(-10deg); }
+      75% { transform: translateX(-50%) rotate(8deg); }
     }
 
     @media (max-width: 800px) {
@@ -686,84 +686,84 @@
       }
 
       .cuicui {
-        width: 148px;
-        height: 214px;
+        width: 74px;
+        height: 107px;
       }
 
       .shadow {
-        width: 88px;
-        height: 18px;
+        width: 44px;
+        height: 9px;
       }
 
       .pose {
-        bottom: 20px;
-        width: 116px;
-        height: 174px;
+        bottom: 10px;
+        width: 58px;
+        height: 87px;
       }
 
       .head {
-        width: 78px;
-        height: 78px;
-        border-width: 4px;
+        width: 39px;
+        height: 39px;
+        border-width: 2px;
       }
 
       .hair-tuft {
-        top: -5px;
-        width: 26px;
-        height: 18px;
+        top: -2px;
+        width: 13px;
+        height: 9px;
       }
 
       .body-shape {
-        top: 62px;
-        width: 74px;
-        height: 80px;
+        top: 31px;
+        width: 37px;
+        height: 40px;
       }
 
       .belly {
-        top: 80px;
-        width: 40px;
-        height: 44px;
+        top: 40px;
+        width: 20px;
+        height: 22px;
       }
 
       .arm {
-        top: 74px;
-        width: 18px;
-        height: 58px;
+        top: 37px;
+        width: 9px;
+        height: 29px;
       }
 
       .arm.left {
-        left: 18px;
+        left: 9px;
       }
 
       .arm.right {
-        right: 18px;
+        right: 9px;
       }
 
       .leg {
-        top: 126px;
-        width: 20px;
-        height: 54px;
+        top: 63px;
+        width: 10px;
+        height: 27px;
       }
 
       .leg.left {
-        left: 38px;
+        left: 19px;
       }
 
       .leg.right {
-        right: 38px;
+        right: 19px;
       }
 
       .foot {
-        width: 28px;
-        height: 10px;
+        width: 14px;
+        height: 5px;
       }
 
       .action-prop {
         right: 0;
-        top: 20px;
-        min-width: 46px;
-        font-size: 12px;
-        padding: 6px 8px;
+        top: 10px;
+        min-width: 23px;
+        font-size: 6px;
+        padding: 3px 4px;
       }
 
       .status-line {
@@ -830,48 +830,48 @@
       }
 
       .cuicui {
-        width: 132px;
-        height: 196px;
+        width: 66px;
+        height: 98px;
       }
 
       .pose {
-        width: 104px;
-        height: 156px;
+        width: 52px;
+        height: 78px;
       }
 
       .head {
-        width: 70px;
-        height: 70px;
+        width: 35px;
+        height: 35px;
       }
 
       .body-shape {
-        top: 56px;
-        width: 66px;
-        height: 72px;
+        top: 28px;
+        width: 33px;
+        height: 36px;
       }
 
       .belly {
-        top: 72px;
-        width: 36px;
-        height: 38px;
+        top: 36px;
+        width: 18px;
+        height: 19px;
       }
 
       .arm {
-        top: 68px;
-        height: 50px;
+        top: 34px;
+        height: 25px;
       }
 
       .leg {
-        top: 112px;
-        height: 48px;
+        top: 56px;
+        height: 24px;
       }
 
       .leg.left {
-        left: 33px;
+        left: 16px;
       }
 
       .leg.right {
-        right: 33px;
+        right: 16px;
       }
     }
   </style>
@@ -882,20 +882,6 @@
       <div class="title-wrap">
         <h1>认养一只翠翠</h1>
         <p>点击或轻触草原上的任意位置，翠翠会自己走过去。下面按钮可以和她互动。</p>
-      </div>
-      <div class="stats">
-        <div class="stat-card">
-          <strong>亲密度</strong>
-          <span id="loveValue">60</span>
-        </div>
-        <div class="stat-card">
-          <strong>饱饱值</strong>
-          <span id="foodValue">58</span>
-        </div>
-        <div class="stat-card">
-          <strong>水润值</strong>
-          <span id="waterValue">62</span>
-        </div>
       </div>
     </header>
 
@@ -961,16 +947,10 @@
     const actionProp = document.getElementById('actionProp');
     const moodBadge = document.getElementById('moodBadge');
     const statusText = document.getElementById('statusText');
-    const loveValue = document.getElementById('loveValue');
-    const foodValue = document.getElementById('foodValue');
-    const waterValue = document.getElementById('waterValue');
 
     const state = {
       mood: 'happy',
       action: '',
-      love: 60,
-      food: 58,
-      water: 62,
       x: 100,
       y: 170,
       moving: false,
@@ -987,7 +967,7 @@
     };
 
     function clamp(value, min, max) {
-      return Math.max(min, Math.min(max, value));
+      return Math.max(min, Math.min(max, max));
     }
 
     function setBubble(text, duration = 1600) {
@@ -1006,12 +986,6 @@
       state.propTimer = setTimeout(() => {
         actionProp.classList.remove('show');
       }, duration);
-    }
-
-    function renderStats() {
-      loveValue.textContent = state.love;
-      foodValue.textContent = state.food;
-      waterValue.textContent = state.water;
     }
 
     function renderMood() {
@@ -1060,8 +1034,8 @@
 
     function getCuicuiBounds() {
       const rect = scene.getBoundingClientRect();
-      const cuicuiWidth = cuicui.offsetWidth || 188;
-      const cuicuiHeight = cuicui.offsetHeight || 260;
+      const cuicuiWidth = cuicui.offsetWidth || 94;
+      const cuicuiHeight = cuicui.offsetHeight || 130;
       const maxX = Math.max(18, rect.width - cuicuiWidth - 18);
       const maxY = Math.max(120, rect.height - cuicuiHeight - 10);
       const minY = Math.min(maxY, Math.max(72, rect.height * 0.28));
@@ -1104,41 +1078,30 @@
       moveTo(targetX, targetY, 480, '翠翠突然撒欢奔跑起来了。');
     }
 
-    function changeValue(key, delta) {
-      state[key] = clamp(state[key] + delta, 0, 100);
-      renderStats();
-    }
-
     function performAction(action) {
       if (action === 'happy') {
-        changeValue('love', 6);
         setMood('happy', '翠翠乐开了花，摇头晃脑地冲你笑。');
         return;
       }
 
       if (action === 'sad') {
-        changeValue('love', -4);
         setMood('sad', '翠翠低下脑袋，像是有点失落。');
         return;
       }
 
       if (action === 'grievance') {
-        changeValue('love', -2);
         setMood('grievance', '翠翠扁着嘴看你，一副很委屈的样子。');
         return;
       }
 
       if (action === 'jump') {
         setAction('jump', 1700);
-        changeValue('love', 4);
         setMood('happy', '翠翠原地蹦高高，开心得停不下来。');
         return;
       }
 
       if (action === 'run') {
         setAction('run', 2400);
-        changeValue('food', -4);
-        changeValue('water', -3);
         setMood('happy', '翠翠开启大草原冲刺模式。');
         randomWalkByRun();
         return;
@@ -1146,9 +1109,6 @@
 
       if (action === 'pushup') {
         setAction('pushup', 2500);
-        changeValue('food', -6);
-        changeValue('water', -4);
-        changeValue('love', 2);
         setMood('happy', '翠翠认真做起了俯卧撑，练得很投入。');
         return;
       }
@@ -1156,8 +1116,6 @@
       if (action === 'feed') {
         setAction('feed', 1600);
         showProp('食物');
-        changeValue('food', 14);
-        changeValue('love', 5);
         setMood('happy', '翠翠大口吃起了你投喂的食物。');
         return;
       }
@@ -1165,15 +1123,12 @@
       if (action === 'water') {
         setAction('water', 1600);
         showProp('水');
-        changeValue('water', 16);
-        changeValue('love', 3);
         setMood('happy', '翠翠喝到了水，整只都精神了。');
         return;
       }
 
       if (action === 'slap') {
         setAction('slap', 1000);
-        changeValue('love', -14);
         setMood('sad', '翠翠被打懵了，委委屈屈地躲开一点。');
         const { maxX } = getCuicuiBounds();
         const targetX = clamp(state.x + 60, 18, maxX);
@@ -1183,7 +1138,6 @@
 
       if (action === 'pet') {
         setAction('pet', 1600);
-        changeValue('love', 12);
         setMood('happy', '翠翠被你摸得眯起眼睛，靠过来撒娇。');
       }
     }
@@ -1211,7 +1165,6 @@
     });
 
     function init() {
-      renderStats();
       renderMood();
       const { maxX, maxY, minY } = getCuicuiBounds();
       state.x = clamp(state.x, 18, maxX);
